@@ -24,7 +24,5 @@ dist-ssr
 *.sw?
 
 # Development & Context Reference Files
-PROJECT_CONTEXT.md
-project_context.md
-Arhaviora_Frontend_Handover.pdf
 design_reference/
+
