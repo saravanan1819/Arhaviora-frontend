@@ -1,0 +1,58 @@
+/* Design System Tokens */
+:root {
+  /* Colors */
+  --color-primary-soft-pink: #F8E7E7;
+  --color-primary-pastel-blue: #E3EBF3;
+  --color-primary-warm-beige: #F5EFEB;
+  --color-neutral-soft-white: #FAFAFA;
+  --color-neutral-light-grey: #E5E5E5;
+  --color-text-dark-brown: #3E2723;
+  --color-text-charcoal: #2B2B2B;
+  --color-text-muted: #757575;
+  --color-accent-gold: #D4AF37;
+  
+  /* Typography */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Spacing */
+  --container-max-width: 1440px;
+  --container-padding-desktop: 80px;
+  --container-padding-tablet: 40px;
+  --container-padding-mobile: 20px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-neutral-soft-white);
+  color: var(--color-text-charcoal);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text-dark-brown);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
