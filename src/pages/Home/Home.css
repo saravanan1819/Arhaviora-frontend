@@ -177,7 +177,7 @@
 /* ======== 1. HERO ======== */
 
 .hp-hero {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 0 80px;
    overflow: hidden;
 }
@@ -308,7 +308,7 @@
 }
 
 .hp-cat-pill:hover {
-   background: #FAF6F1;
+   background: #F7F1EA;
    color: #3d3d3d;
 }
 
@@ -318,7 +318,7 @@
 
 /* ======== 2. COLLECTIONS ======== */
 .hp-collections {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 80px 80px;
 }
 
@@ -442,7 +442,7 @@
 
 /* ======== 3. BEST SELLERS ======== */
 .hp-bestsellers {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 64px 80px;
 }
 
@@ -699,7 +699,7 @@
 
 /* ======== 5. PERSONALIZER ======== */
 .hp-personalizer {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 80px 80px;
 }
 
@@ -1019,7 +1019,7 @@
 
 /* ======== 6. PROMISE ======== */
 .hp-promise {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 64px 80px;
 }
 
@@ -1165,7 +1165,7 @@
 
 /* ======== 8. TESTIMONIALS ======== */
 .hp-testimonials {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 64px 80px;
 }
 
@@ -1408,7 +1408,7 @@
 
 /* ======== 10. FAQ ======== */
 .hp-faq {
-   background: #FAF6F1;
+   background: #F7F1EA;
    padding: 80px 80px;
 }
 

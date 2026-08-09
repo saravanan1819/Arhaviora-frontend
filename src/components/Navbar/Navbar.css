@@ -6,7 +6,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   width: 100%;
 }
 
@@ -45,7 +45,7 @@
 
 /* 2. Primary Navigation Bar */
 .primary-navbar {
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   width: 100%;
 }
 
@@ -278,7 +278,7 @@
 
 /* Mobile Dropdown Menu */
 .mobile-nav-menu {
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   border-top: 1px solid #EBE4DD;
   position: absolute;
   top: 100%;
@@ -358,6 +358,15 @@
   .nav-inner-container {
     padding: 0 24px;
     height: 72px;
+    position: relative;
+  }
+
+  .nav-center-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
   }
   
   .brand-logo-img {
