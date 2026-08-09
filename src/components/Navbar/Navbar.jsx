@@ -128,12 +128,12 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
 
               <Link to="/wishlist" className="action-icon-link" aria-label="Wishlist">
                 <img src="/assets/icons/wishlist_heart.svg" alt="Wishlist" width="20" height="20" />
-                <span className="count-dot">0</span>
+                <span className="count-dot">{wishlistCount}</span>
               </Link>
 
               <Link to="/cart" className="action-icon-link" aria-label="Shopping Bag">
                 <img src="/assets/icons/cart_bag.svg" alt="Cart" width="20" height="20" />
-                <span className="count-dot">0</span>
+                <span className="count-dot">{cartCount}</span>
               </Link>
 
               <Link to="/login" className="action-login-text">

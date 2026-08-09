@@ -6,7 +6,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   width: 100%;
 }
 
@@ -45,7 +45,7 @@
 
 /* 2. Primary Navigation Bar */
 .primary-navbar {
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   width: 100%;
 }
 
@@ -219,12 +219,16 @@
 
 .count-dot {
   position: absolute;
-  top: 0;
-  right: -4px;
-  background-color: transparent;
+  top: -2px;
+  right: -2px;
+  background-color: #ffffff;
+  border: 1.5px solid #ffffff;
   color: #8a867f;
   font-size: 10px;
   font-weight: 600;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,7 +282,7 @@
 
 /* Mobile Dropdown Menu */
 .mobile-nav-menu {
-  background-color: #FAF6F1;
+  background-color: #F7F1EA;
   border-top: 1px solid #EBE4DD;
   position: absolute;
   top: 100%;
@@ -358,6 +362,15 @@
   .nav-inner-container {
     padding: 0 24px;
     height: 72px;
+    position: relative;
+  }
+
+  .nav-center-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
   }
   
   .brand-logo-img {
