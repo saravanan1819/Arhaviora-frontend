@@ -1,0 +1,90 @@
+/* ==========================================================================
+   BUTTON COMPONENT STYLES (#37:3798 & #37:3781)
+   ========================================================================== */
+
+.btn-pill-component {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-button);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+}
+
+/* Variants */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border: 1px solid var(--color-primary);
+  box-shadow: var(--shadow-cta);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary-light);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-main);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover {
+  background-color: #A9CAE2;
+}
+
+/* Sizes */
+.btn-sm {
+  height: 38px;
+  padding: 6px 18px;
+  font-size: 14px;
+}
+
+.btn-md {
+  height: 48px;
+  padding: 10px 24px;
+  font-size: 16px;
+}
+
+.btn-lg {
+  height: 54px;
+  padding: 12px 32px;
+  font-size: 18px;
+}
+
+.btn-icon {
+  transition: transform var(--transition-fast);
+}
+
+.btn-pill-component:hover .btn-icon {
+  transform: translate(2px, -2px);
+}
+
+.btn-pill-component:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
