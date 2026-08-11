@@ -219,12 +219,16 @@
 
 .count-dot {
   position: absolute;
-  top: 0;
-  right: -4px;
-  background-color: transparent;
+  top: -2px;
+  right: -2px;
+  background-color: #ffffff;
+  border: 1.5px solid #ffffff;
   color: #8a867f;
   font-size: 10px;
   font-weight: 600;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;

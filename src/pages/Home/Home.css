@@ -176,6 +176,7 @@
 
 /* ======== 1. HERO ======== */
 
+/* 1. HERO SECTION */
 .hp-hero {
    background: #F7F1EA;
    padding: 0 80px;
@@ -317,6 +318,7 @@
 }
 
 /* ======== 2. COLLECTIONS ======== */
+/* 2. OUR COLLECTIONS */
 .hp-collections {
    background: #F7F1EA;
    padding: 80px 80px;
@@ -441,6 +443,7 @@
 }
 
 /* ======== 3. BEST SELLERS ======== */
+/* 3. BESTSELLERS */
 .hp-bestsellers {
    background: #F7F1EA;
    padding: 64px 80px;
@@ -613,6 +616,7 @@
 }
 
 /* ======== 4. NEW RANGE ======== */
+/* 4. OUR RANGE */
 .hp-range {
    background: #BCD8EC;
    padding: 80px 80px;
@@ -698,6 +702,7 @@
 }
 
 /* ======== 5. PERSONALIZER ======== */
+/* 5. PERSONALIZER */
 .hp-personalizer {
    background: #F7F1EA;
    padding: 80px 80px;
@@ -1018,6 +1023,7 @@
 }
 
 /* ======== 6. PROMISE ======== */
+/* 6. OUR PROMISE */
 .hp-promise {
    background: #F7F1EA;
    padding: 64px 80px;
@@ -1099,6 +1105,7 @@
 }
 
 /* ======== 7. GIFTING ======== */
+/* 7. GIFTING */
 .hp-gifting {
    background: #BCD8EC;
    padding: 64px 80px;
@@ -1164,6 +1171,7 @@
 }
 
 /* ======== 8. TESTIMONIALS ======== */
+/* 8. TESTIMONIALS */
 .hp-testimonials {
    background: #F7F1EA;
    padding: 64px 80px;
@@ -1334,6 +1342,7 @@
 }
 
 /* ======== 9. REELS ======== */
+/* 9. INSTAGRAM REELS */
 .hp-reels {
    background: #BCD8EC;
    padding: 64px 80px;
@@ -1407,6 +1416,7 @@
 }
 
 /* ======== 10. FAQ ======== */
+/* 10. FAQ */
 .hp-faq {
    background: #F7F1EA;
    padding: 80px 80px;
@@ -1474,6 +1484,7 @@
 }
 
 /* ======== 11. FINAL CTA ======== */
+/* 11. CTA */
 .hp-final-cta {
    position: relative;
    background-color: #E9EBEB;

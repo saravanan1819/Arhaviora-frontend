@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { StarIcon, HeartIcon, ShieldCheckIcon, TruckIcon, GiftIcon, PlusIcon, MinusIcon, PlayIcon, CheckCircleIcon, ShoppingBagIcon, UserIcon, SparkleIcon, ArrowRightIcon } from '../../components/Icons/Icons';
+import { Personalizer } from '../../components/Personalizer/Personalizer';
+import { ALL_PRODUCTS } from '../../data/products';
+import { heroSlides, collections, testimonials, realLifeVideos, promiseItems, faqItems } from '../../data/homeData';
 import './Home.css';
 
 export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) => {
   const [customName, setCustomName] = useState('Vivaan');
-  const [selectedFont, setSelectedFont] = useState('Playfair');
-  const [selectedColor, setSelectedColor] = useState('#A4C8E1');
   const [activeFaq, setActiveFaq] = useState(0);
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -17,30 +18,6 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeReel, setActiveReel] = useState(0);
-
-  const heroSlides = [
-    {
-      image: '/assets/images/hero/hero_mother_baby.png',
-      title: 'Made Just For Their Little World',
-      subtitle: 'Every baby deserves something special. Arhaviora creates premium, personalized products.',
-      ctaText: 'Start Personalizing',
-      ctaLink: '/shop?category=personalized'
-    },
-    {
-      image: '/assets/images/collections/baby_essentials.png',
-      title: 'Crafted with Love, Designed to Last',
-      subtitle: 'Explore our collection of hand-crafted premium products made with organic baby-safe cotton.',
-      ctaText: 'Shop Gift Sets',
-      ctaLink: '/shop?category=gifts'
-    },
-    {
-      image: '/assets/images/collections/baby_clothing.png',
-      title: 'Cozy Essentials for Every Milestone',
-      subtitle: 'Wrap your little ones in the softest blankets and custom clothing personalized just for them.',
-      ctaText: 'Explore Clothing',
-      ctaLink: '/shop?category=clothing'
-    }
-  ];
 
   const handleCollScroll = () => {
     if (collTrackRef.current) {
@@ -61,71 +38,12 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
     }
   };
 
-  const colorSwatches = [
-    { name: 'Sky Blue', hex: '#A4C8E1' },
-    { name: 'Rose Pink', hex: '#D44D60' },
-    { name: 'Olive', hex: '#A8AA6A' },
-    { name: 'Steel Blue', hex: '#4A7FA5' },
-    { name: 'Blush', hex: '#EDAABB' },
-  ];
-
-  const fonts = ['Playfair', 'Poppins', 'Roboto'];
-
-  const collections = [
-    { id: 'c1', title: 'Baby\nEssentials', link: '/shop?category=essentials', image: '/assets/images/collections/baby_essentials.png' },
-    { id: 'c2', title: 'Baby\nClothing', link: '/shop?category=clothing', image: '/assets/images/collections/baby_clothing.png', featured: true },
-    { id: 'c3', title: 'New Born\nEssentials', link: '/shop?category=newborn', image: '/assets/images/collections/newborn_essentials.png' },
-    { id: 'c4', title: 'Diaper Caddy\nOrganizer', link: '/shop?category=diapercaddy', image: '/assets/images/collections/diaper_caddy.png' },
-    { id: 'c5', title: 'Baby Shower\nGifts', link: '/shop?category=gifts', image: '/assets/images/collections/baby_shower_gifts.png' },
-    { id: 'c6', title: 'Maternity\nClothing', link: '/shop?category=maternity', image: '/assets/images/collections/maternity_clothing.png' },
-    { id: 'c7', title: 'Nursery\nEssentials', link: '/shop?category=nursery', image: '/assets/images/collections/nursery_essentials.png' },
-  ];
-
-  const bestSellers = [
-    { id: 'bs1', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_1.png' },
-    { id: 'bs2', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_2.png' },
-    { id: 'bs3', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_3.png' },
-    { id: 'bs4', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_4.png' },
-    { id: 'bs5', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_5.png' },
-    { id: 'bs6', title: 'Personalized Wildflower Baby Blanket...', price: '₹300', origPrice: '₹1200', off: '63% Off', rating: '4.8', image: '/assets/images/products/bestseller_6.png' },
-  ];
-
-  const testimonials = [
-    { id: 't1', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_1.png', avatar: '/assets/images/avatars/user_1.png' },
-    { id: 't2', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_2.png', avatar: '/assets/images/avatars/user_2.png' },
-    { id: 't3', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_3.png', avatar: '/assets/images/avatars/user_3.png' },
-    { id: 't4', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_1.png', avatar: '/assets/images/avatars/user_1.png' },
-    { id: 't5', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_2.png', avatar: '/assets/images/avatars/user_2.png' },
-  ];
-
-  const realLifeVideos = [
-    { id: 'r1', thumbnail: '/assets/images/reels/reel_1.png' },
-    { id: 'r2', thumbnail: '/assets/images/reels/reel_2.png' },
-    { id: 'r3', thumbnail: '/assets/images/reels/reel_3.png' },
-    { id: 'r4', thumbnail: '/assets/images/reels/reel_4.png' },
-    { id: 'r5', thumbnail: '/assets/images/reels/reel_1.png' },
-  ];
-
-  const promiseItems = [
-    { title: 'Made Just For Their Little World', desc: 'Every piece is uniquely personalized for your baby.' },
-    { title: 'Premium Baby–Safe Materials', desc: 'Gentle, soft, and safe for delicate newborn skin.' },
-    { title: 'Beautiful Gift Experience', desc: 'Elegantly packed in signature boxes, ready to gift.' },
-    { title: 'Crafted to Last', desc: 'Made with exceptional care and attention to every detail.' },
-  ];
-
-  const faqItems = [
-    { q: 'How long does personalization take?', a: 'Personalized orders are usually crafted within 3–5 business days before shipping.' },
-    { q: 'Can I personalize every product?', a: 'Most of our blankets, onesies, bathrobes, and gift sets support custom name and initials embroidery.' },
-    { q: 'Are your products safe for newborns?', a: 'Yes, all products use 100% certified organic cotton, non-toxic vegetable dyes, and are dermatologically tested.' },
-    { q: 'Can I send my order as a gift?', a: 'Absolutely! We offer luxury keepsake gift boxing and personalized handwritten gift cards upon checkout.' },
-    { q: 'What if I receive a damaged product?', a: 'We offer a 100% hassle-free replacement within 7 days of delivery for any damaged or misprinted items.' },
-    { q: 'Do you ship across India?', a: 'Yes, we ship to over 19,000+ pin codes across India with complimentary free express shipping on orders above ₹999.' },
-  ];
+  const bestSellers = ALL_PRODUCTS.slice(0, 6);
 
   return (
     <main className="hp-root">
 
-      {/* 1. HERO */}
+      {/* 1. HERO SECTION */}
       <section className="hp-hero">
         <div className="hp-hero-slider-wrapper">
           <div
@@ -174,7 +92,6 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
           </div>
         </div>
 
-        {/* Category pills */}
         <div className="hp-cat-pills">
           <Link to="/shop?category=newborn" className="hp-cat-pill"><span className="hp-cat-icon"><ShoppingBagIcon size={18} color="#D44D60" /></span> Newborn Essentials</Link>
           <Link to="/shop?category=babyshower" className="hp-cat-pill"><span className="hp-cat-icon"><UserIcon size={18} color="#D44D60" /></span> Baby shower Gifts</Link>
@@ -184,7 +101,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         </div>
       </section>
 
-      {/* 2. COLLECTIONS */}
+      {/* 2. OUR COLLECTIONS */}
       <section className="hp-collections">
         <div className="hp-coll-container">
           <div className="hp-section-pre">Shop By Collection</div>
@@ -205,7 +122,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         </div>
       </section>
 
-      {/* 3. BEST SELLERS */}
+      {/* 3. BESTSELLERS */}
       <section className="hp-bestsellers">
         <div className="hp-section-pre hp-pre-rose">Best Seller</div>
         <h2 className="hp-section-h2">Discover what parents love most</h2>
@@ -213,7 +130,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
           {bestSellers.map((p) => (
             <div key={p.id} className="hp-bs-card">
               <div className="hp-bs-img-wrap">
-                <img src={p.image} alt={p.title} className="hp-bs-img" />
+                <img src={p.imageUrl} alt={p.title} className="hp-bs-img" />
                 <span className="hp-bs-badge">Best Seller</span>
                 <button className="hp-bs-heart" onClick={() => onToggleWishlist(p)} aria-label="Wishlist">
                   <HeartIcon size={16} color="#D44D60" />
@@ -232,9 +149,9 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
                 </div>
                 <div className="hp-bs-title">{p.title}</div>
                 <div className="hp-bs-price-row">
-                  <span className="hp-bs-price">{p.price}</span>
-                  <span className="hp-bs-orig">{p.origPrice}</span>
-                  <span className="hp-bs-off">({p.off})</span>
+                  <span className="hp-bs-price">₹{p.price}</span>
+                  <span className="hp-bs-orig">₹{p.originalPrice}</span>
+                  <span className="hp-bs-off">({p.discount})</span>
                 </div>
                 <button className="hp-bs-atc" onClick={() => onAddToCart(p)}>ADD TO CART</button>
               </div>
@@ -246,7 +163,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         </div>
       </section>
 
-      {/* 4. OUR NEW RANGE */}
+      {/* 4. OUR RANGE */}
       <section className="hp-range">
         <div className="hp-section-pre hp-pre-rose">OUR NEW RANGE</div>
         <h2 className="hp-section-h2">For Every Beautiful Journey</h2>
@@ -277,92 +194,10 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
 
       {/* 5. PERSONALIZER */}
       <section className="hp-personalizer" id="personalizer-section">
-        <div className="hp-section-pre hp-pre-rose">Personalized With Love</div>
-        <h2 className="hp-section-h2">Create something Truly Yours</h2>
-        <div className="hp-pers-layout">
-          <div className="hp-pers-form">
-            <div className="hp-pers-form-head">
-              <div className="hp-pers-head-icon"><GiftIcon size={20} color="#D44D60" /></div>
-              <div className="hp-pers-head-text-group">
-                <span className="hp-pers-form-title">Personalized Your Product</span>
-                <p className="hp-pers-form-sub">Fill in the details and see the magic in real time</p>
-              </div>
-            </div>
-            <label className="hp-pers-label">Baby's Name</label>
-            <div className="hp-pers-input-wrap">
-              <StarIcon size={14} color="#BCD8EC" />
-              <input className="hp-pers-input" value={customName} onChange={e => setCustomName(e.target.value)} placeholder="Vivaan" />
-            </div>
-            <label className="hp-pers-label">Choose Font</label>
-            <div className="hp-pers-fonts">
-              {fonts.map((f, i) => (
-                <button key={i} className={`hp-pers-font-btn${selectedFont === f ? ' active' : ''}`} onClick={() => setSelectedFont(f)}>
-                  <span className="hp-font-aa" style={{ fontFamily: f === 'Playfair' ? 'Playfair Display, serif' : f === 'Poppins' ? 'Poppins, sans-serif' : 'Roboto, sans-serif' }}>Aa</span>
-                  <span className="hp-font-name">{f}</span>
-                </button>
-              ))}
-            </div>
-            <label className="hp-pers-label">Thread Color</label>
-            <div className="hp-pers-colors">
-              {colorSwatches.map((c) => (
-                <button key={c.hex} className={`hp-color-dot${selectedColor === c.hex ? ' active' : ''}`} style={{ background: c.hex }} onClick={() => setSelectedColor(c.hex)} aria-label={c.name} />
-              ))}
-            </div>
-            <div className="hp-pers-preview-hint">
-              <span className="hp-pers-hint-icon-circle">
-                <HeartIcon size={14} color="#2D2A26" />
-              </span>
-              <span>Fill in the details and see the magic in real time</span>
-            </div>
-          </div>
-          <div className="hp-pers-preview">
-            <div className="hp-live-badge">
-              <span className="hp-live-icon-circle">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </span>
-              <span className="hp-live-text">Live Preview</span>
-            </div>
-            {/* Live custom blanket preview */}
-            <div className="hp-live-preview-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <img src="/assets/images/personalizer/blanket_canvas.png" alt="Personalized Blanket Preview" className="hp-pers-img" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <div 
-                className="hp-preview-text-overlay"
-                style={{
-                  fontFamily: selectedFont === 'Playfair' ? 'Playfair Display, serif' : selectedFont === 'Poppins' ? 'Poppins, sans-serif' : 'Roboto, sans-serif',
-                  color: selectedColor
-                }}
-              >
-                {customName || 'Vivaan'}
-              </div>
-            </div>
-            <div className="hp-pers-quality-bar">
-              <span>Premium Quality</span>
-              <span className="hp-dot-gold">•</span>
-              <span>Handmade</span>
-              <span className="hp-dot-gold">•</span>
-              <span>Made with Love</span>
-            </div>
-          </div>
-        </div>
-        {/* Benefits bar */}
-        <div className="hp-pers-benefits">
-          <div className="hp-benefit"><div className="hp-ben-icon"><GiftIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Gift Ready</div><div className="hp-ben-sub">Beautifully Packed,</div></div></div>
-          <div className="hp-benefit-divider"></div>
-          <div className="hp-benefit"><div className="hp-ben-icon"><TruckIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Ship in 3–5 days</div><div className="hp-ben-sub">Delivered with Care</div></div></div>
-          <div className="hp-benefit-divider"></div>
-          <div className="hp-benefit"><div className="hp-ben-icon"><HeartIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Made with love</div><div className="hp-ben-sub">Happy Parents</div></div></div>
-          <div className="hp-benefit-divider"></div>
-          <div className="hp-benefit"><div className="hp-ben-icon"><ShieldCheckIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Baby Safe</div><div className="hp-ben-sub">Non Toxic & Babysafe</div></div></div>
-        </div>
-        <div className="hp-pers-cta">
-          <Link to="/shop?category=personalized" className="hp-btn-rose">All Personalized Products <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>
-        </div>
+        <Personalizer showSectionHeading={true} showGiftMessage={false} onAddToCart={onAddToCart} />
       </section>
 
-      {/* 6. THE ARHAVIORA PROMISE */}
+      {/* 6. OUR PROMISE */}
       <section className="hp-promise">
         <h2 className="hp-section-h2">The Arhaviora Promise</h2>
         <p className="hp-section-sub">Every baby deserves something special. Arhaviora creates premium, personalized products that<br />become treasured keepsakes for families.</p>
@@ -460,7 +295,6 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
             ></span>
           ))}
         </div>
-        {/* Stats */}
         <div className="hp-stats-bar">
           <div className="hp-stat"><div className="hp-ben-icon"><TruckIcon size={20} color="#D44D60" /></div><div className="hp-stat-text"><div className="hp-stat-num">10,000+</div><div className="hp-stat-lbl">Order Delivered</div></div></div>
           <div className="hp-stat-div"></div>
@@ -472,7 +306,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         </div>
       </section>
 
-      {/* 9. SEE IN REAL LIFE */}
+      {/* 9. INSTAGRAM REELS */}
       <section className="hp-reels">
         <h2 className="hp-section-h2">See Arhaviora in Real Life</h2>
         <p className="hp-section-sub">Real babies. Real moments. Beautiful personalized memories.</p>
@@ -521,7 +355,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         </div>
       </section>
 
-      {/* 11. FINAL CTA */}
+      {/* 11. CTA */}
       <section className="hp-final-cta">
         <div className="hp-cta-inner">
           <div className="hp-cta-img-left">

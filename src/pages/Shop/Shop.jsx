@@ -45,9 +45,8 @@ const FilterSection = ({ title, children, defaultOpen = true }) => {
   );
 };
 
-/* ── Shop Product Card — matches hp-bs-card from Home page ── */
-const ShopCard = ({ product }) => {
-  const [wishlisted, setWishlisted] = useState(false);
+/* ── Shop Product Card ── */
+const ShopCard = ({ product, onAddToCart, onToggleWishlist, isWishlisted }) => {
   return (
     <div className="sp-card">
       <div className="sp-card-img-wrap">
@@ -55,11 +54,14 @@ const ShopCard = ({ product }) => {
           <img src={product.imageUrl} alt={product.title} className="sp-card-img" loading="lazy" />
         </Link>
         <button
-          className={`sp-card-heart ${wishlisted ? 'active' : ''}`}
-          onClick={() => setWishlisted(w => !w)}
+          className={`sp-card-heart ${isWishlisted ? 'active' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            onToggleWishlist(product.id, !isWishlisted);
+          }}
           aria-label="Add to wishlist"
         >
-          <HeartIcon size={16} color="#D44D60" fill={wishlisted ? '#D44D60' : 'none'} />
+          <HeartIcon size={16} color="#D44D60" fill={isWishlisted ? '#D44D60' : 'none'} />
         </button>
       </div>
 
@@ -86,14 +88,18 @@ const ShopCard = ({ product }) => {
           <span className="sp-card-off">({product.discount})</span>
         </div>
 
-        <button className="sp-card-atc">ADD TO CART</button>
+        <button className="sp-card-atc" onClick={() => onAddToCart(product)}>ADD TO CART</button>
       </div>
     </div>
   );
 };
 
 /* ── Main Shop Page ── */
-export const Shop = () => {
+export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
+  const [searchParams] = useSearchParams();
+  const categoryQuery = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
+
   const [sortBy, setSortBy]               = useState('Featured');
   const [sortOpen, setSortOpen]           = useState(false);
   const [currentPage, setCurrentPage]     = useState(1);
@@ -114,6 +120,28 @@ export const Shop = () => {
 
   const filtered = useMemo(() => {
     let list = [...ALL_PRODUCTS].filter(p => p.price >= priceMin && p.price <= priceMax);
+
+    // Apply URL search query parameter if present
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+    }
+
+    // Apply URL category parameter mapping if present
+    if (categoryQuery) {
+      const catLower = categoryQuery.toLowerCase();
+      list = list.filter(p => {
+        const pCat = p.category.toLowerCase();
+        if (catLower === 'blankets' && pCat.includes('blanket')) return true;
+        if (catLower === 'clothing' && (pCat.includes('clothing') || pCat.includes('onesie') || pCat.includes('romper'))) return true;
+        if (catLower === 'maternity' && pCat.includes('maternity')) return true;
+        if (catLower === 'nursery' && pCat.includes('nursery')) return true;
+        if (catLower === 'boxes' && pCat.includes('gift')) return true;
+        if (catLower === 'gifts' && pCat.includes('gift')) return true;
+        return pCat.includes(catLower);
+      });
+    }
+
     if (checkedAges.length)    list = list.filter(p => checkedAges.some(a => a.toLowerCase().includes(p.age)));
     if (checkedCats.length)    list = list.filter(p => checkedCats.includes(p.category));
     if (checkedGenders.length) list = list.filter(p => checkedGenders.map(g => g.toLowerCase()).includes(p.gender));
@@ -121,7 +149,7 @@ export const Shop = () => {
     if (sortBy === 'Price: High to Low')  list.sort((a, b) => b.price - a.price);
     if (sortBy === 'Customer Rating')     list.sort((a, b) => b.rating - a.rating);
     return list;
-  }, [checkedAges, checkedCats, checkedGenders, checkedAvail, priceMin, priceMax, sortBy]);
+  }, [checkedAges, checkedCats, checkedGenders, checkedAvail, priceMin, priceMax, sortBy, searchQuery, categoryQuery]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -280,7 +308,15 @@ export const Shop = () => {
           {/* Product Grid */}
           {paginated.length > 0 ? (
             <div className="sp-product-grid">
-              {paginated.map(p => <ShopCard key={p.id} product={p} />)}
+              {paginated.map(p => (
+                <ShopCard 
+                  key={p.id} 
+                  product={p} 
+                  onAddToCart={onAddToCart} 
+                  onToggleWishlist={onToggleWishlist} 
+                  isWishlisted={wishlist.includes(p.id)} 
+                />
+              ))}
             </div>
           ) : (
             <div className="sp-empty-state">
