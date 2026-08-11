@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 
 # Development & Context Reference Files
+PROJECT_CONTEXT.md
 design_reference/
-
+scratch/

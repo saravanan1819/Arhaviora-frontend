@@ -1,1 +1,290 @@
-/* Footer CSS */
+/* ==========================================================================
+   ARHAVIORA GLOBAL FOOTER STYLING
+   ========================================================================== */
+
+.site-footer {
+   background-color: #F7F1EA;
+   color: #2D2A26;
+   padding: 80px 80px 100px;
+   font-family: 'Plus Jakarta Sans', sans-serif;
+   box-sizing: border-box;
+   width: 100%;
+}
+
+.footer-container {
+   display: flex;
+   justify-content: space-between;
+   gap: 250px;
+   width: 100%;
+}
+
+/* ==========================================================================
+   LEFT PANEL
+   ========================================================================== */
+.footer-left-panel {
+   flex: 0 0 420px;
+   display: flex;
+   flex-direction: column;
+   gap: 28px;
+}
+
+.available-on-block {
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+}
+
+.available-title {
+   font-size: 14px;
+   font-weight: 600;
+   color: #D44D60;
+   letter-spacing: 0.02em;
+}
+
+.market-badges-row {
+   display: flex;
+   align-items: center;
+   gap: 24px;
+}
+
+.marketplace-badge-link {
+   display: inline-flex;
+   align-items: center;
+   transition: transform 0.2s;
+}
+
+.marketplace-badge-link:hover {
+   transform: translateY(-2px);
+}
+
+/* Use the SVG's natural 80×80 dimensions */
+.marketplace-logo-amazon {
+   width: 80px;
+   height: 80px;
+   display: block;
+}
+
+.marketplace-logo-flipkart {
+   width: 80px;
+   height: 80px;
+   display: block;
+}
+
+.footer-brand-desc {
+   font-size: 14px;
+   line-height: 1.65;
+   color: #9C9A9F;
+   margin: 0;
+   max-width: 340px;
+}
+
+.footer-social-row {
+   display: flex;
+   align-items: center;
+   gap: 18px;
+}
+
+.footer-social-row a {
+   display: inline-flex;
+   align-items: center;
+   transition: transform 0.2s;
+}
+
+.footer-social-row a:hover {
+   transform: translateY(-2px);
+}
+
+.footer-social-icon {
+   width: 22px;
+   height: 22px;
+   display: block;
+}
+
+.footer-left-divider {
+   border: none;
+   border-top: 1px solid #E2DDD8;
+   margin: 0;
+   width: 100%;
+}
+
+.footer-copyright-text {
+   font-size: 13px;
+   color: #9C9A9F;
+   margin: 0;
+}
+
+/* ==========================================================================
+   RIGHT PANEL
+   ========================================================================== */
+.footer-right-panel {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   gap: 0;
+   align-items: flex-end;
+}
+
+.newsletter-block {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 14px;
+   width: 100%;
+   max-width: 380px;
+   margin-bottom: 48px;
+}
+
+.newsletter-heading {
+   font-size: 17px;
+   font-weight: 600;
+   color: #4D4E5E;
+   margin: 0;
+}
+
+.newsletter-form {
+   position: relative;
+   width: 100%;
+}
+
+.newsletter-input {
+   width: 100%;
+   height: 50px;
+   border-radius: 50px;
+   border: 1px solid #E8CFCF;
+   background: #F7F1EA;
+   padding: 0 56px 0 22px;
+   font-size: 14px;
+   color: #2D2A26;
+   outline: none;
+   box-sizing: border-box;
+   transition: border-color 0.2s;
+}
+
+.newsletter-input::placeholder {
+   color: #A9A5A0;
+}
+
+.newsletter-input:focus {
+   border-color: #D44D60;
+}
+
+.newsletter-submit-btn {
+   position: absolute;
+   right: 6px;
+   top: 50%;
+   transform: translateY(-50%);
+   width: 38px;
+   height: 38px;
+   border-radius: 50%;
+   background-color: #FFFFFF;
+   border: 1px solid #E8CFCF;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #D44D60;
+   font-size: 15px;
+   transition: background-color 0.2s, border-color 0.2s;
+}
+
+.newsletter-submit-btn:hover {
+   background-color: #FDF0F2;
+   border-color: #D44D60;
+}
+
+.newsletter-toast-msg {
+   font-size: 12px;
+   font-weight: 600;
+   color: #38A169;
+   margin-top: 4px;
+}
+
+/* Nav columns span full right-panel width */
+.footer-nav-columns {
+   width: 100%;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 20px;
+   align-items: start;
+}
+
+.footer-links-col {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.footer-col-title {
+   font-size: 15px;
+   font-weight: 700;
+   color: #4D4E5E;
+   margin: 0 0 4px;
+}
+
+.footer-links-list {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+}
+
+.footer-links-list a {
+   font-size: 14px;
+   color: #9C9A9F;
+   text-decoration: none;
+   transition: color 0.2s;
+}
+
+.footer-links-list a:hover {
+   color: #D44D60;
+}
+
+/* ==========================================================================
+   RESPONSIVE OVERRIDES
+   ========================================================================== */
+@media (max-width: 1024px) {
+   .site-footer {
+      padding: 60px 32px 80px;
+   }
+
+   .footer-container {
+      flex-direction: column;
+      gap: 60px;
+   }
+
+   .footer-left-panel {
+      flex: 1;
+      width: 100%;
+      max-width: 100%;
+   }
+
+   .footer-right-panel {
+      flex: 1;
+      align-items: flex-start;
+      width: 100%;
+   }
+
+   .newsletter-block {
+      max-width: 100%;
+      align-items: flex-start;
+   }
+}
+
+@media (max-width: 640px) {
+   .site-footer {
+      padding: 48px 20px 64px;
+   }
+
+   .footer-nav-columns {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+   }
+
+   .marketplace-logo-amazon,
+   .marketplace-logo-flipkart {
+      width: 64px;
+      height: 64px;
+   }
+}
