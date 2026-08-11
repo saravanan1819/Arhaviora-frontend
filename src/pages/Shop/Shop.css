@@ -1,7 +1,6 @@
-/* ==========================================================================
-   SHOP PAGE — src/pages/Shop/Shop.css
-   Figma reference: Frame #39:88 · 1440px · bg #F7F1EA
-   ========================================================================== */
+/* ==========
+   SHOP PAGE
+   ========== */
 
 /* ── Page Shell ── */
 .sp-page {
@@ -35,7 +34,7 @@
   display: flex;
   flex-direction: row;
   gap: 40px;
-  padding: 24px 81px 80px;  /* top gap between breadcrumb and content */
+  padding: 24px 81px 80px; 
   align-items: flex-start;
 }
 
@@ -74,7 +73,7 @@
   color: #2E2B28;
 }
 
-/* Filter sliders icon (3 horizontal bars with dots — equalizer style) */
+/* Filter sliders icon */
 .sp-filter-icon {
   display: flex;
   flex-direction: column;
@@ -185,7 +184,7 @@
   top: 50%;
   transform: translateY(-50%);
 }
-/* Orange slider thumb — Figma uses orange #E87722 */
+/* Orange slider thumb */
 .sp-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 20px;
@@ -444,7 +443,7 @@
 .sp-pg-btn {
   width: 32px;
   height: 32px;
-  border-radius: 6px;               /* rounded-corner squares */
+  border-radius: 6px;             
   border: none;
   background: #FFF;
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -488,10 +487,9 @@
   padding: 0 4px;
 }
 
-/* ── Red/Pink separator line above footer (Figma) ── */
 .sp-footer-separator {
   height: 1px;
-  background: #FCD5D9;  /* pink/red line */
+  background: #FCD5D9;  
   width: 100%;
 }
 
