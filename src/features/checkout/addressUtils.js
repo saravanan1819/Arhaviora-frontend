@@ -1,5 +1,5 @@
-export const ADDRESS_STORAGE_KEY = 'arhaviora_addresses_v3';
-export const SELECTED_ADDRESS_STORAGE_KEY = 'arhaviora_selected_address_v3';
+export const ADDRESS_STORAGE_KEY = 'arhaviora_addresses_v4';
+export const SELECTED_ADDRESS_STORAGE_KEY = 'arhaviora_selected_address_v4';
 
 export const normalizeAddress = (address = {}) => ({
   id: String(address.id),
@@ -27,13 +27,25 @@ export const formatAddressLine = (address = {}) => {
   return parts.join(', ');
 };
 
+export const formatDeliveryAddressSummary = (address = {}) => {
+  const street = [address.line1, address.line2].filter(Boolean).join(', ');
+  const cityPostal = [address.city, address.postalCode].filter(Boolean).join(' - ');
+  const stateCountry = [address.state, address.country].filter(Boolean).join(' - ');
+
+  return [street, cityPostal, stateCountry].filter(Boolean).join(' ');
+};
+
 export const createSeedAddresses = () => [
   normalizeAddress({
     id: 'addr-1',
     label: 'HOME',
-    fullName: 'Saravanan',
+    fullName: 'Saravanan S',
     phone: '+917598238098',
-    line1: '45 / 5 / 1 Kovaiputhur , Coimbatore',
+    line1: '12, Kovaiputhur',
+    city: 'Coimbatore',
+    postalCode: '621 041',
+    state: 'Tamilnadu',
+    country: 'India',
     isDefault: true,
   }),
   normalizeAddress({

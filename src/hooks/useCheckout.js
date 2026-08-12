@@ -14,8 +14,11 @@ import {
 import {
   CHECKOUT_STEP,
   canProceedFromAddress,
+  canProceedFromOrderSummary,
   loadCheckoutStep,
+  loadPaymentMethod,
   saveCheckoutStep,
+  savePaymentMethod,
 } from '../features/checkout/checkoutUtils';
 
 export const useCheckout = () => {
@@ -37,6 +40,7 @@ export const useCheckout = () => {
   });
 
   const [currentStep, setCurrentStep] = useState(loadCheckoutStep);
+  const [paymentMethod, setPaymentMethod] = useState(loadPaymentMethod);
   const [addressForm, setAddressForm] = useState({ mode: null, addressId: null });
 
   useEffect(() => {
@@ -51,10 +55,18 @@ export const useCheckout = () => {
     saveCheckoutStep(currentStep);
   }, [currentStep]);
 
+  useEffect(() => {
+    savePaymentMethod(paymentMethod);
+  }, [paymentMethod]);
+
   const selectAddress = useCallback((addressId) => {
     const id = String(addressId);
     setSelectedAddressId(id);
-    setAddresses((prev) => setDefaultAddress(prev, id));
+    setAddresses((prev) => {
+      const next = setDefaultAddress(prev, id);
+      return next;
+    });
+    setCurrentStep(CHECKOUT_STEP.ORDER_SUMMARY);
   }, []);
 
   const deleteAddress = useCallback((addressId) => {
@@ -91,11 +103,24 @@ export const useCheckout = () => {
     setCurrentStep(step);
   }, []);
 
+  const goToAddressStep = useCallback(() => {
+    setCurrentStep(CHECKOUT_STEP.ADDRESS);
+  }, []);
+
+  const selectPaymentMethod = useCallback((method) => {
+    setPaymentMethod(method);
+  }, []);
+
   const confirmAddressStep = useCallback(() => {
     if (!canProceedFromAddress(selectedAddressId, addresses)) return false;
     setCurrentStep(CHECKOUT_STEP.ORDER_SUMMARY);
     return true;
   }, [selectedAddressId, addresses]);
+
+  const confirmOrderSummaryStep = useCallback(() => {
+    setCurrentStep(CHECKOUT_STEP.PAYMENT);
+    return true;
+  }, []);
 
   const selectedAddress = useMemo(
     () => addresses.find((item) => item.id === selectedAddressId) || null,
@@ -112,11 +137,18 @@ export const useCheckout = () => {
     [selectedAddressId, addresses]
   );
 
+  const canProceedToPayment = useCallback(
+    (cartItems = []) =>
+      canProceedFromOrderSummary(cartItems, selectedAddressId, addresses, paymentMethod),
+    [selectedAddressId, addresses, paymentMethod]
+  );
+
   return {
     addresses,
     selectedAddressId,
     selectedAddress,
     currentStep,
+    paymentMethod,
     addressFormMode: addressForm.mode,
     editingAddressId: addressForm.addressId,
     editingAddress,
@@ -128,7 +160,11 @@ export const useCheckout = () => {
     requestEditAddress,
     dismissAddressForm,
     goToStep,
+    goToAddressStep,
+    selectPaymentMethod,
     confirmAddressStep,
+    confirmOrderSummaryStep,
+    canProceedToPayment,
   };
 };
 

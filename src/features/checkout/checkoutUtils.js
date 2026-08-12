@@ -13,10 +13,60 @@ export const CHECKOUT_STEPS = [
 ];
 
 export const CHECKOUT_STORAGE_KEY = 'arhaviora_checkout_step_v1';
+export const PAYMENT_METHOD_STORAGE_KEY = 'arhaviora_payment_method_v1';
+
+export const PAYMENT_METHOD = {
+  ONLINE: 'online',
+  COD: 'cod',
+};
+
+export const PAYMENT_OPTIONS = [
+  {
+    id: PAYMENT_METHOD.ONLINE,
+    label: 'Online Payment',
+    icon: '/assets/icons/safe-paymet.svg',
+    iconSelected: '/assets/icons/payment-02.svg',
+  },
+  {
+    id: PAYMENT_METHOD.COD,
+    label: 'Cash on Delivery',
+    icon: '/assets/icons/cash-on-delivery.svg',
+    iconSelected: '/assets/icons/cash-on-delivery.svg',
+  },
+];
 
 export const canProceedFromAddress = (selectedAddressId, addresses = []) =>
   Boolean(selectedAddressId) &&
   addresses.some((item) => item.id === String(selectedAddressId));
+
+export const canProceedFromOrderSummary = (
+  cartItems = [],
+  selectedAddressId,
+  addresses = [],
+  paymentMethod
+) =>
+  canProceedFromAddress(selectedAddressId, addresses) &&
+  cartItems.length > 0 &&
+  PAYMENT_OPTIONS.some((option) => option.id === paymentMethod);
+
+export const loadPaymentMethod = () => {
+  try {
+    const raw = localStorage.getItem(PAYMENT_METHOD_STORAGE_KEY);
+    return PAYMENT_OPTIONS.some((option) => option.id === raw)
+      ? raw
+      : PAYMENT_METHOD.ONLINE;
+  } catch {
+    return PAYMENT_METHOD.ONLINE;
+  }
+};
+
+export const savePaymentMethod = (method) => {
+  try {
+    localStorage.setItem(PAYMENT_METHOD_STORAGE_KEY, String(method));
+  } catch {
+    // ignore
+  }
+};
 
 export const loadCheckoutStep = () => {
   try {
