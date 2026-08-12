@@ -8,6 +8,8 @@ import { ProductDetails } from './pages/ProductDetails/ProductDetails';
 import { Cart } from './pages/Cart/Cart';
 import { Checkout } from './pages/Checkout/Checkout';
 import { useCart } from './hooks/useCart';
+import { useCheckout } from './hooks/useCheckout';
+import { CHECKOUT_STEPS, CHECKOUT_STEP } from './features/checkout/checkoutUtils';
 
 function App() {
   const {
@@ -19,6 +21,16 @@ function App() {
     removeItem,
     applyPromo,
   } = useCart();
+
+  const {
+    addresses,
+    selectedAddressId,
+    currentStep,
+    selectAddress,
+    deleteAddress,
+    requestAddAddress,
+    requestEditAddress,
+  } = useCheckout();
 
   const [wishlist, setWishlist] = useState(['1', '3']);
   const [notification, setNotification] = useState(null);
@@ -105,7 +117,21 @@ function App() {
                 />
               }
             />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route
+              path="/checkout"
+              element={
+                <Checkout
+                  steps={CHECKOUT_STEPS}
+                  activeStep={currentStep || CHECKOUT_STEP.ADDRESS}
+                  addresses={addresses}
+                  selectedAddressId={selectedAddressId}
+                  onSelectAddress={selectAddress}
+                  onDeleteAddress={deleteAddress}
+                  onRequestAddAddress={requestAddAddress}
+                  onRequestEditAddress={requestEditAddress}
+                />
+              }
+            />
           </Routes>
         </main>
 
