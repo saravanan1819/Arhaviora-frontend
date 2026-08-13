@@ -10,6 +10,7 @@ export const Cart = ({
   onUpdateQuantity,
   onRemoveItem,
   onApplyPromo,
+  onProceedToCheckout,
 }) => {
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState(totals.promoCode || '');
@@ -17,6 +18,14 @@ export const Cart = ({
   useEffect(() => {
     setPromoCode(totals.promoCode || '');
   }, [totals.promoCode]);
+
+  const handleProceedToCheckout = () => {
+    if (onProceedToCheckout) {
+      onProceedToCheckout();
+      return;
+    }
+    navigate('/checkout');
+  };
 
   const {
     subtotal = 0,
@@ -213,11 +222,7 @@ export const Cart = ({
             <button
               type="button"
               className="cart-checkout-btn"
-              onClick={() =>
-                navigate('/checkout', {
-                  state: { cartItems, promoCode, totals },
-                })
-              }
+              onClick={handleProceedToCheckout}
             >
               PROCEED TO CHECKOUT
             </button>

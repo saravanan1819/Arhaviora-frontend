@@ -1,5 +1,5 @@
-export const CART_STORAGE_KEY = 'arhaviora_cart_v1';
-export const CART_PRICING_STORAGE_KEY = 'arhaviora_cart_pricing_v1';
+export const CART_STORAGE_KEY = 'arhaviora_cart_v2';
+export const CART_PRICING_STORAGE_KEY = 'arhaviora_cart_pricing_v2';
 export const DEFAULT_CART_THUMB = '/assets/images/products/bestseller_1.png';
 
 export const normalizeCartItem = (product = {}) => ({
@@ -127,7 +127,7 @@ export const createSeedCartItems = () => {
     imageUrl: DEFAULT_CART_THUMB,
   };
 
-  return ['cart-1', 'cart-2', 'cart-3'].map((id) =>
+  return ['cart-1', 'cart-2'].map((id) =>
     normalizeCartItem({ ...base, id, productId: '1' })
   );
 };

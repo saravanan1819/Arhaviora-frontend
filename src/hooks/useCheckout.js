@@ -15,9 +15,12 @@ import {
   CHECKOUT_STEP,
   canProceedFromAddress,
   canProceedFromOrderSummary,
+  createOrderConfirmation,
   loadCheckoutStep,
+  loadLastOrder,
   loadPaymentMethod,
   saveCheckoutStep,
+  saveLastOrder,
   savePaymentMethod,
 } from '../features/checkout/checkoutUtils';
 
@@ -41,6 +44,7 @@ export const useCheckout = () => {
 
   const [currentStep, setCurrentStep] = useState(loadCheckoutStep);
   const [paymentMethod, setPaymentMethod] = useState(loadPaymentMethod);
+  const [placedOrder, setPlacedOrder] = useState(loadLastOrder);
   const [addressForm, setAddressForm] = useState({ mode: null, addressId: null });
 
   useEffect(() => {
@@ -58,6 +62,10 @@ export const useCheckout = () => {
   useEffect(() => {
     savePaymentMethod(paymentMethod);
   }, [paymentMethod]);
+
+  useEffect(() => {
+    saveLastOrder(placedOrder);
+  }, [placedOrder]);
 
   const selectAddress = useCallback((addressId) => {
     const id = String(addressId);
@@ -107,6 +115,11 @@ export const useCheckout = () => {
     setCurrentStep(CHECKOUT_STEP.ADDRESS);
   }, []);
 
+  /** After confirmation CTAs — keep last order for display/API later, restart flow. */
+  const beginNewCheckout = useCallback(() => {
+    setCurrentStep(CHECKOUT_STEP.ADDRESS);
+  }, []);
+
   const selectPaymentMethod = useCallback((method) => {
     setPaymentMethod(method);
   }, []);
@@ -117,15 +130,44 @@ export const useCheckout = () => {
     return true;
   }, [selectedAddressId, addresses]);
 
-  const confirmOrderSummaryStep = useCallback(() => {
-    setCurrentStep(CHECKOUT_STEP.PAYMENT);
-    return true;
-  }, []);
-
   const selectedAddress = useMemo(
     () => addresses.find((item) => item.id === selectedAddressId) || null,
     [addresses, selectedAddressId]
   );
+
+  /** Skip Payment UI for now — snapshot order locally, advance to Confirmation.
+   *  Future: async placeOrder API → setPlacedOrder(serverOrder) → then CONFIRMATION. */
+  const confirmOrderSummaryStep = useCallback(
+    (cartItems = [], totals = {}) => {
+      if (!canProceedFromOrderSummary(cartItems, selectedAddressId, addresses, paymentMethod)) {
+        return false;
+      }
+
+      const order = createOrderConfirmation({
+        address: selectedAddress,
+        cartItems,
+        totals,
+        paymentMethod,
+      });
+
+      setPlacedOrder(order);
+      setCurrentStep(CHECKOUT_STEP.CONFIRMATION);
+      return true;
+    },
+    [selectedAddressId, addresses, paymentMethod, selectedAddress]
+  );
+
+  const copyOrderId = useCallback(async () => {
+    const orderId = placedOrder?.orderId;
+    if (!orderId) return false;
+
+    try {
+      await navigator.clipboard.writeText(orderId);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [placedOrder]);
 
   const editingAddress = useMemo(
     () => addresses.find((item) => item.id === addressForm.addressId) || null,
@@ -149,6 +191,7 @@ export const useCheckout = () => {
     selectedAddress,
     currentStep,
     paymentMethod,
+    placedOrder,
     addressFormMode: addressForm.mode,
     editingAddressId: addressForm.addressId,
     editingAddress,
@@ -161,10 +204,12 @@ export const useCheckout = () => {
     dismissAddressForm,
     goToStep,
     goToAddressStep,
+    beginNewCheckout,
     selectPaymentMethod,
     confirmAddressStep,
     confirmOrderSummaryStep,
     canProceedToPayment,
+    copyOrderId,
   };
 };
 

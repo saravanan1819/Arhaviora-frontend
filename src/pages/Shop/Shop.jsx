@@ -118,13 +118,11 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
   const filtered = useMemo(() => {
     let list = [...ALL_PRODUCTS].filter(p => p.price >= priceMin && p.price <= priceMax);
 
-    // Apply URL search query parameter if present
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
     }
 
-    // Apply URL category parameter mapping if present
     if (categoryQuery) {
       const catLower = categoryQuery.toLowerCase();
       list = list.filter(p => {

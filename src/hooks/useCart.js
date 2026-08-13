@@ -16,7 +16,8 @@ import {
 export const useCart = () => {
   const [cartItems, setCartItems] = useState(() => {
     const stored = loadCartFromStorage();
-    return stored && stored.length > 0 ? stored : createSeedCartItems();
+    // null = never stored → seed for demo; [] = intentionally cleared
+    return stored !== null ? stored : createSeedCartItems();
   });
 
   const [pricing, setPricing] = useState(() => {

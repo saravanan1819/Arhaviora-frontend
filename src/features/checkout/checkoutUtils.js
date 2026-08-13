@@ -14,6 +14,7 @@ export const CHECKOUT_STEPS = [
 
 export const CHECKOUT_STORAGE_KEY = 'arhaviora_checkout_step_v1';
 export const PAYMENT_METHOD_STORAGE_KEY = 'arhaviora_payment_method_v1';
+export const LAST_ORDER_STORAGE_KEY = 'arhaviora_last_order_v1';
 
 export const PAYMENT_METHOD = {
   ONLINE: 'online',
@@ -48,6 +49,86 @@ export const canProceedFromOrderSummary = (
   canProceedFromAddress(selectedAddressId, addresses) &&
   cartItems.length > 0 &&
   PAYMENT_OPTIONS.some((option) => option.id === paymentMethod);
+
+export const getPaymentMethodLabel = (paymentMethod) =>
+  PAYMENT_OPTIONS.find((option) => option.id === paymentMethod)?.label || 'Online Payment';
+
+export const getPaymentMethodOption = (paymentMethod) =>
+  PAYMENT_OPTIONS.find((option) => option.id === paymentMethod) || PAYMENT_OPTIONS[0];
+
+export const formatOrderDate = (date = new Date()) => {
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return '';
+
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+export const createOrderId = () => {
+  const suffix = String(Math.floor(10000 + Math.random() * 90000));
+  return `ST-ORD-${suffix}`;
+};
+
+/** Snapshot for confirmation — replace with API order response. */
+export const createOrderConfirmation = ({
+  address = null,
+  cartItems = [],
+  totals = {},
+  paymentMethod = PAYMENT_METHOD.ONLINE,
+  orderId = createOrderId(),
+  orderDate = new Date(),
+} = {}) => ({
+  orderId: String(orderId),
+  orderDate: formatOrderDate(orderDate),
+  customerName: address?.fullName || '',
+  phone: address?.phone || '',
+  addressLabel: address?.label || 'HOME',
+  addressLine: [
+    address?.line1,
+    address?.line2,
+    address?.city,
+    address?.state,
+    address?.postalCode,
+  ]
+    .filter(Boolean)
+    .join(', '),
+  items: cartItems.map((item) => ({ ...item })),
+  totals: {
+    subtotal: Number(totals.subtotal) || 0,
+    discount: Number(totals.discount) || 0,
+    shippingFee: Number(totals.shippingFee) || 0,
+    shippingLabel: totals.shippingLabel || 'Free',
+    total: Number(totals.total) || 0,
+  },
+  paymentMethod,
+  paymentLabel: getPaymentMethodLabel(paymentMethod),
+});
+
+export const loadLastOrder = () => {
+  try {
+    const raw = localStorage.getItem(LAST_ORDER_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveLastOrder = (order) => {
+  try {
+    if (order) {
+      localStorage.setItem(LAST_ORDER_STORAGE_KEY, JSON.stringify(order));
+    } else {
+      localStorage.removeItem(LAST_ORDER_STORAGE_KEY);
+    }
+  } catch {
+    // ignore
+  }
+};
 
 export const loadPaymentMethod = () => {
   try {

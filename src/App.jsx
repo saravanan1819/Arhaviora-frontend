@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar/Navbar';
 import { Footer } from './components/Footer/Footer';
 import { Home } from './pages/Home/Home';
@@ -13,6 +13,7 @@ import { CHECKOUT_STEPS, CHECKOUT_STEP } from './features/checkout/checkoutUtils
 
 function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const {
     cartItems,
@@ -22,6 +23,7 @@ function AppLayout() {
     updateQuantity,
     removeItem,
     applyPromo,
+    clearCart,
   } = useCart();
 
   const {
@@ -30,14 +32,17 @@ function AppLayout() {
     selectedAddress,
     currentStep,
     paymentMethod,
+    placedOrder,
     selectAddress,
     deleteAddress,
     requestAddAddress,
     requestEditAddress,
     goToAddressStep,
+    beginNewCheckout,
     selectPaymentMethod,
     confirmOrderSummaryStep,
     canProceedToPayment,
+    copyOrderId,
   } = useCheckout();
 
   const [wishlist, setWishlist] = useState(['1', '3']);
@@ -65,9 +70,40 @@ function AppLayout() {
     showToast(isAdded ? 'Added item to your wishlist!' : 'Removed item from your wishlist');
   };
 
+  const handleConfirmOrderSummary = () => {
+    const placed = confirmOrderSummaryStep(cartItems, totals);
+    if (placed) {
+      clearCart();
+    }
+  };
+
+  const handleCopyOrderId = async () => {
+    const ok = await copyOrderId();
+    showToast(ok ? 'Order ID copied' : 'Could not copy Order ID');
+  };
+
+  const handleDownloadInvoice = () => {
+    showToast('Invoice download coming soon');
+  };
+
+  const handleContinueShopping = () => {
+    beginNewCheckout();
+    navigate('/shop');
+  };
+
+  const handleTrackOrder = () => {
+    showToast('Order tracking coming soon');
+  };
+
+  const handleProceedToCheckout = () => {
+    goToAddressStep();
+    navigate('/checkout');
+  };
+
   const hideFooter =
     location.pathname === '/checkout' &&
-    currentStep === CHECKOUT_STEP.ORDER_SUMMARY;
+    (currentStep === CHECKOUT_STEP.ORDER_SUMMARY ||
+      currentStep === CHECKOUT_STEP.CONFIRMATION);
 
   return (
     <div className="app-container">
@@ -103,7 +139,7 @@ function AppLayout() {
         <Routes>
           <Route
             path="/"
-            element={<Home onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} />}
+            element={<Home onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />}
           />
           <Route
             path="/shop"
@@ -115,7 +151,10 @@ function AppLayout() {
               />
             }
           />
-          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route 
+            path="/product/:id" 
+            element={<ProductDetails onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />} 
+          />
           <Route
             path="/cart"
             element={
@@ -125,6 +164,7 @@ function AppLayout() {
                 onUpdateQuantity={updateQuantity}
                 onRemoveItem={handleRemoveItem}
                 onApplyPromo={applyPromo}
+                onProceedToCheckout={handleProceedToCheckout}
               />
             }
           />
@@ -140,14 +180,20 @@ function AppLayout() {
                 paymentMethod={paymentMethod}
                 cartItems={cartItems}
                 totals={totals}
+                placedOrder={placedOrder}
                 onSelectAddress={selectAddress}
                 onDeleteAddress={deleteAddress}
                 onRequestAddAddress={requestAddAddress}
                 onRequestEditAddress={requestEditAddress}
                 onSelectPaymentMethod={selectPaymentMethod}
                 onGoToAddressStep={goToAddressStep}
-                onConfirmOrderSummary={confirmOrderSummaryStep}
+                onConfirmOrderSummary={handleConfirmOrderSummary}
                 canProceedToPayment={canProceedToPayment(cartItems)}
+                onCopyOrderId={handleCopyOrderId}
+                onDownloadInvoice={handleDownloadInvoice}
+                onContinueShopping={handleContinueShopping}
+                onTrackOrder={handleTrackOrder}
+                onBeginNewCheckout={beginNewCheckout}
               />
             }
           />
