@@ -9,7 +9,6 @@
   overflow-x: hidden;
 }
 
-/* ── Shared horizontal gutters — match Navbar/Footer (80px) ── */
 .checkout-stepper,
 .checkout-body {
   padding-left: 80px;
@@ -140,7 +139,6 @@
   background: #2E2B28;
 }
 
-/* Full content width between navbar/footer gutters */
 .checkout-stepper-rule {
   width: 100%;
   height: 1.5px;
@@ -291,7 +289,6 @@
   margin-top: 2px;
 }
 
-/* ── Add new address — dashed line fading at card edges ── */
 .checkout-add-address-wrap {
   display: flex;
   flex-direction: column;
@@ -376,7 +373,6 @@
   color: #636372;
 }
 
-/* ── Footer separator ── */
 .checkout-footer-separator {
   height: 1px;
   background: #FCD5D9;
@@ -424,7 +420,6 @@
   margin-bottom: 14px;
 }
 
-/* ── Delivery address ── */
 .checkout-delivery-header {
   display: flex;
   align-items: center;
@@ -482,7 +477,6 @@
   word-break: break-word;
 }
 
-/* ── Payment method pills ── */
 .checkout-payment-options {
   display: flex;
   flex-wrap: wrap;
@@ -535,7 +529,6 @@
   object-fit: contain;
 }
 
-/* Unselected COD / online icons → #4B4B4B */
 .checkout-payment-option:not(.is-selected) .checkout-payment-icon {
   filter: brightness(0) saturate(100%) invert(29%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
 }
@@ -552,7 +545,6 @@
   white-space: nowrap;
 }
 
-/* ── Order items ── */
 .checkout-item-list {
   list-style: none;
   margin: 0;
@@ -665,7 +657,6 @@
   white-space: nowrap;
 }
 
-/* ── Totals ── */
 .checkout-totals-rows {
   display: flex;
   flex-direction: column;

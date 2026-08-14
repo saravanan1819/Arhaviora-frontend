@@ -1,4 +1,3 @@
-# Logs
 logs
 *.log
 npm-debug.log*
@@ -23,7 +22,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Development & Context Reference Files
-PROJECT_CONTEXT.md
-design_reference/
-scratch/
+
