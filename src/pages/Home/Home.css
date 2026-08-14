@@ -1,6 +1,6 @@
-/* ============================
-   HOME PAGE — FIGMA PIXEL PERFECT
-   ============================ */
+/* =========
+   HOME PAGE 
+   ========= */
 
 .hp-root {
    font-family: 'Plus Jakarta Sans', sans-serif;
@@ -174,7 +174,6 @@
    background: #C8BAB0;
 }
 
-/* ======== 1. HERO ======== */
 
 /* 1. HERO SECTION */
 .hp-hero {
@@ -317,7 +316,6 @@
    font-size: 17px;
 }
 
-/* ======== 2. COLLECTIONS ======== */
 /* 2. OUR COLLECTIONS */
 .hp-collections {
    background: #F7F1EA;
@@ -442,7 +440,6 @@
    border-radius: 2.5px;
 }
 
-/* ======== 3. BEST SELLERS ======== */
 /* 3. BESTSELLERS */
 .hp-bestsellers {
    background: #F7F1EA;
@@ -615,7 +612,6 @@
    margin-top: 40px;
 }
 
-/* ======== 4. NEW RANGE ======== */
 /* 4. OUR RANGE */
 .hp-range {
    background: #BCD8EC;
@@ -701,7 +697,6 @@
    max-width: 90%;
 }
 
-/* ======== 5. PERSONALIZER ======== */
 /* 5. PERSONALIZER */
 .hp-personalizer {
    background: #F7F1EA;
@@ -1022,7 +1017,6 @@
    margin-top: 32px;
 }
 
-/* ======== 6. PROMISE ======== */
 /* 6. OUR PROMISE */
 .hp-promise {
    background: #F7F1EA;
@@ -1104,7 +1098,6 @@
    font-family: var(--font-ui);
 }
 
-/* ======== 7. GIFTING ======== */
 /* 7. GIFTING */
 .hp-gifting {
    background: #BCD8EC;
@@ -1170,7 +1163,6 @@
    max-width: 280px;
 }
 
-/* ======== 8. TESTIMONIALS ======== */
 /* 8. TESTIMONIALS */
 .hp-testimonials {
    background: #F7F1EA;
@@ -1341,7 +1333,6 @@
    background: #EDE8E3;
 }
 
-/* ======== 9. REELS ======== */
 /* 9. INSTAGRAM REELS */
 .hp-reels {
    background: #BCD8EC;
@@ -1483,7 +1474,6 @@
    margin: 0;
 }
 
-/* ======== 11. FINAL CTA ======== */
 /* 11. CTA */
 .hp-final-cta {
    position: relative;

@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  SearchIcon,
-  UserIcon,
-  HeartIcon,
-  ShoppingBagIcon,
-  GiftIcon,
-  TruckIcon,
-  ChevronDownIcon
-} from '../Icons/Icons';
+import { ChevronDownIcon } from '../Icons/Icons';
 import './Navbar.css';
 
 export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
@@ -30,15 +22,15 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
       <div className="top-announcement-bar">
         <div className="announcement-inner">
           <div className="anno-pill">
-            <GiftIcon size={16} color="#D44D60" />
+            <img src="/assets/icons/package.svg" alt="" width={16} height={16} />
             <span>Personalized with love</span>
           </div>
           <div className="anno-pill">
-            <TruckIcon size={16} color="#D44D60" />
+            <img src="/assets/icons/shipping_truck.svg" alt="" width={16} height={16} />
             <span>Free Shipping on order above ₹999</span>
           </div>
           <div className="anno-pill">
-            <GiftIcon size={16} color="#D44D60" />
+            <img src="/assets/icons/package.svg" alt="" width={16} height={16} />
             <span>Crafted for little one</span>
           </div>
         </div>

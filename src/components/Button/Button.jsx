@@ -4,8 +4,8 @@ import './Button.css';
 
 export const Button = ({
   children,
-  variant = 'primary', // 'primary', 'outline', 'secondary', 'subtle', 'ghost'
-  size = 'md',        // 'sm', 'md', 'lg'
+  variant = 'primary',
+  size = 'md',        
   icon = true,
   onClick,
   type = 'button',

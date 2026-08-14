@@ -6,7 +6,7 @@ import { ALL_PRODUCTS } from '../../data/products';
 import { heroSlides, collections, testimonials, realLifeVideos, promiseItems, faqItems } from '../../data/homeData';
 import './Home.css';
 
-export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) => {
+export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wishlist = [] }) => {
   const [customName, setCustomName] = useState('Vivaan');
   const [activeFaq, setActiveFaq] = useState(0);
   const [emailInput, setEmailInput] = useState('');
@@ -127,16 +127,18 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
         <div className="hp-section-pre hp-pre-rose">Best Seller</div>
         <h2 className="hp-section-h2">Discover what parents love most</h2>
         <div className="hp-bs-grid">
-          {bestSellers.map((p) => (
-            <div key={p.id} className="hp-bs-card">
-              <div className="hp-bs-img-wrap">
-                <img src={p.imageUrl} alt={p.title} className="hp-bs-img" />
-                <span className="hp-bs-badge">Best Seller</span>
-                <button className="hp-bs-heart" onClick={() => onToggleWishlist(p)} aria-label="Wishlist">
-                  <HeartIcon size={16} color="#D44D60" />
-                </button>
-              </div>
-              <div className="hp-bs-info">
+          {bestSellers.map((p) => {
+            const isWishlisted = wishlist.includes(p.id);
+            return (
+              <div key={p.id} className="hp-bs-card">
+                <div className="hp-bs-img-wrap">
+                  <img src={p.imageUrl} alt={p.title} className="hp-bs-img" />
+                  <span className="hp-bs-badge">Best Seller</span>
+                  <button className={`hp-bs-heart ${isWishlisted ? 'active' : ''}`} onClick={() => onToggleWishlist(p.id, !isWishlisted)} aria-label="Wishlist">
+                    <HeartIcon size={16} color="#D44D60" fill={isWishlisted ? '#D44D60' : 'none'} />
+                  </button>
+                </div>
+                <div className="hp-bs-info">
                 <div className="hp-bs-swatches-row">
                   <div className="hp-bs-swatches">
                     <span className="hp-swatch" style={{ background: '#A4C8E1' }}></span>
@@ -156,7 +158,8 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { } }) 
                 <button className="hp-bs-atc" onClick={() => onAddToCart(p)}>ADD TO CART</button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         <div className="hp-bs-view-all">
           <Link to="/shop" className="hp-btn-rose">View All Products <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>

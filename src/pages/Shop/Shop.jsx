@@ -3,9 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { HeartIcon, StarIcon, ChevronRightIcon } from '../../components/Icons/Icons';
 import './Shop.css';
 
-/* ─────────────────────────────────────────
-   Product data (85 items)
-───────────────────────────────────────── */
 const BASE_PRODUCTS = [
   { id: '1',  title: 'Personalized Wildflower Baby Blanket',     category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_1.png' },
   { id: '2',  title: 'Organic Muslin Swaddle & Wrap Set',        category: 'Swaddles & Blankets', age: '0-3', price: 999,  originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_2.png' },
@@ -121,13 +118,11 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
   const filtered = useMemo(() => {
     let list = [...ALL_PRODUCTS].filter(p => p.price >= priceMin && p.price <= priceMax);
 
-    // Apply URL search query parameter if present
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
     }
 
-    // Apply URL category parameter mapping if present
     if (categoryQuery) {
       const catLower = categoryQuery.toLowerCase();
       list = list.filter(p => {

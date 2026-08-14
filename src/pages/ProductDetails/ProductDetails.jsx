@@ -192,7 +192,7 @@ export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] })
               onClick={() => onToggleWishlist(product.id, !isWishlisted)}
               className={`pd-wishlist-btn ${isWishlisted ? 'active' : ''}`}
             >
-              <HeartIcon size={18} color="#D44D60" fill="none" />
+              <HeartIcon size={18} color="#D44D60" fill={isWishlisted ? '#D44D60' : 'none'} />
               <span>Add to Wishlist</span>
             </button>
           </div>
