@@ -4,6 +4,7 @@ import { ALL_PRODUCTS } from '../../data/products';
 import { HeartIcon, StarIcon, ChevronRightIcon } from '../../components/Icons/Icons';
 import { Personalizer } from '../../components/Personalizer/Personalizer';
 import './ProductDetails.css';
+import '../Shop/Shop.css';
 
 const GiftIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

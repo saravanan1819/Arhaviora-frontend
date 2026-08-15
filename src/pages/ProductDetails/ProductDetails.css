@@ -263,7 +263,7 @@
 .pd-btn-atc,
 .pd-btn-buy {
   height: 56px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   font-size: 16px;
   font-weight: 700;
@@ -271,25 +271,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.pd-btn-atc:hover,
-.pd-btn-buy:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .pd-btn-atc {
   background-color: #A5D9FF;
-  color: #2E2B28;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  color: #1C1A17;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .pd-btn-buy {
   background-color: #D44D60;
   color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.pd-btn-atc:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.20);
+  background-color: #92cdfa;
+}
+
+.pd-btn-buy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.20);
+  background-color: #C23E51;
+}
+
+.pd-btn-atc:active {
+  transform: translateY(1px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.10);
+}
+
+.pd-btn-buy:active {
+  transform: translateY(1px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.10);
 }
 
 .pd-info-banner {
@@ -1032,6 +1048,13 @@
     margin-bottom: 80px;
   }
 
+  .pd-related-section {
+    margin-left: -40px;
+    margin-right: -40px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
   .pd-top-fold {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1138,6 +1161,13 @@
     margin-bottom: 60px;
   }
 
+  .pd-related-section {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   .pd-about-card {
     padding: 24px;
   }
@@ -1148,56 +1178,347 @@
 }
 
 @media (max-width: 480px) {
-  .pd-related-grid {
+  .pd-page {
+    padding: 14px 14px 40px;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pd-breadcrumb {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 11px;
+  }
+
+  .pd-top-fold {
     grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* CRITICAL: grid children need min-width:0 to shrink below content size */
+  .pd-gallery-section {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .pd-details-col {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pd-main-img-wrap {
+    height: 220px;
+    border-radius: 16px;
+  }
+
+  .pd-thumb-btn {
+    width: 52px;
+    height: 60px;
+    border-radius: 8px;
+  }
+
+  .pd-product-title {
+    font-size: 20px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    word-break: break-word;
+  }
+
+  .pd-rating-row {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .pd-rating-text {
+    font-size: 12px;
+  }
+
+  .pd-description {
+    font-size: 12px;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+  .pd-badges-row {
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .pd-badge-pill {
+    padding: 4px 10px;
+    font-size: 11px;
+    gap: 4px;
+    border-radius: 16px;
+  }
+
+  .pd-price-row {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .pd-price {
+    font-size: 24px;
+  }
+
+  .pd-orig-price {
+    font-size: 14px;
+  }
+
+  .pd-discount-pct {
+    font-size: 12px;
+  }
+
+  .pd-action-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pd-qty-selector {
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+  }
+
+  .pd-wishlist-btn {
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .pd-purchase-buttons {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pd-btn-atc,
+  .pd-btn-buy {
+    height: 46px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Info banner: 2x2 grid layout strictly bounded */
+  .pd-info-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+  }
+
+  .pd-info-banner-divider {
+    display: none;
+  }
+
+  .pd-info-banner-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px;
+  }
+
+  .pd-info-banner-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .pd-info-banner-label {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .pd-customizer-wrapper {
+    margin-bottom: 24px;
+  }
+
+  .pd-customizer-card {
+    padding: 14px 12px;
+    border-radius: 16px;
+  }
+
+  .pd-custom-header {
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  .pd-custom-header-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pd-custom-header-title {
+    font-size: 15px;
+  }
+
+  .pd-custom-header-subtitle {
+    font-size: 11px;
   }
 
   .pd-canvas-overlay-text {
-    font-size: 38px;
+    font-size: 26px;
+  }
+
+  /* About section — compact height & padding on mobile */
+  .pd-about-section {
+    padding: 16px 14px;
+    margin-left: -14px;
+    margin-right: -14px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+
+  .pd-about-card {
+    padding: 14px;
+    border-radius: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pd-about-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .pd-about-desc {
+    font-size: 12px;
+    margin-bottom: 12px;
+    line-height: 1.45;
+  }
+
+  .pd-about-table:not(.expanded) {
+    max-height: 150px;
+  }
+
+  .pd-table-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+  }
+
+  .pd-table-label {
+    font-size: 12px;
+    flex-shrink: 0;
+    max-width: 45%;
+  }
+
+  .pd-table-value {
+    font-size: 12px;
+    text-align: right;
+    max-width: 55%;
+    word-break: break-word;
+  }
+
+  .pd-table-expand-btn {
+    height: 38px;
+    width: 160px;
+    font-size: 12px;
+    margin: 12px auto 0;
+    border-radius: 8px;
+  }
+
+  .pd-section-heading {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .pd-reviews-section {
+    margin-bottom: 24px;
+  }
+
+  .pd-related-section {
+    margin-left: -14px;
+    margin-right: -14px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 20px;
+    padding-bottom: 28px;
+    margin-top: 0;
+    box-sizing: border-box;
+  }
+
+  .pd-related-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
   .pd-reviews-summary-row {
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
   }
 
   .pd-rev-score-card {
-    padding: 24px;
-    max-width: 280px;
-    margin: 0 auto;
+    padding: 16px;
+    max-width: 100%;
+    margin: 0;
     width: 100%;
   }
 
   .pd-rev-score {
-    font-size: 54px;
+    font-size: 42px;
   }
 
   .pd-rev-bar-row {
-    grid-template-columns: 90px 1fr 30px;
-    gap: 12px;
+    grid-template-columns: 80px 1fr 28px;
+    gap: 8px;
   }
 
   .pd-rev-bar-label,
   .pd-rev-bar-count {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .pd-comment-form {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .pd-comment-submit-btn {
-    height: 48px;
-    border-radius: 12px;
+    height: 44px;
+    border-radius: 10px;
   }
 
   .pd-rev-card {
-    padding: 20px;
+    padding: 14px;
   }
 
   .pd-rev-card-header {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
 
   .pd-rev-date {
@@ -1208,11 +1529,11 @@
   }
 
   .pd-rev-images {
-    gap: 10px;
+    gap: 8px;
   }
 
   .pd-rev-img-attachment {
-    width: 80px;
-    height: 80px;
+    width: 68px;
+    height: 68px;
   }
 }

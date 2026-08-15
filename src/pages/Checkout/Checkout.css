@@ -730,20 +730,25 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .checkout-continue-btn:hover:not(:disabled) {
-  background: #9A3644;
+  background: #c23e51;
+  transform: translateY(-2px);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.20);
 }
 
 .checkout-continue-btn:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: translateY(1px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.10);
 }
 
 .checkout-continue-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ==========
@@ -970,11 +975,13 @@
   border: none;
   background: #D44D60;
   color: #FFFFFF;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .checkout-confirm-btn-primary:hover {
-  background: #C24354;
+  background: #c23e51;
+  transform: translateY(-2px);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.20);
 }
 
 .checkout-confirm-btn-icon {
@@ -997,17 +1004,18 @@
 .checkout-confirm-btn-outline {
   border: 1.5px solid #D44D60;
   background: transparent;
-  color: #B2666E;
+  color: #D44D60;
   box-shadow: none;
 }
 
 .checkout-confirm-btn-outline:hover {
-  background: rgba(212, 77, 96, 0.06);
-  color: #B2666E;
+  background: #D44D60;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 .checkout-confirm-btn:active {
-  transform: scale(0.98);
+  transform: translateY(1px);
 }
 
 /* ── Responsive ── */
@@ -1183,12 +1191,16 @@
   }
 
   .checkout-confirm-actions {
-    gap: 16px;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
   }
 
   .checkout-confirm-btn {
-    height: 52px;
-    font-size: 15px;
+    height: 56px;
+    font-size: 14px;
+    width: 100%;
+    white-space: nowrap;
   }
 }
 
@@ -1325,15 +1337,84 @@
   .checkout-confirm-payment-box {
     flex-direction: column;
     align-items: flex-start;
+    padding: 12px 14px;
+    margin-top: 14px;
+    border-radius: 12px;
+  }
+
+  .checkout-confirm-payment-label {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .checkout-confirm-payment-value {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .checkout-confirm-payment-value img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .checkout-confirm-download-btn {
+    height: 44px;
+    font-size: 14px;
+    margin-top: 14px;
+    border-radius: 10px;
+  }
+
+  .checkout-confirm-download-btn img {
+    width: 15px;
+    height: 15px;
   }
 
   .checkout-confirm-actions {
     flex-direction: column;
     width: 100%;
+    box-sizing: border-box;
+    gap: 10px;
+    margin-top: 14px;
   }
 
   .checkout-confirm-btn {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
+    height: 54px;
+    font-size: 13px;
+    padding: 0 16px;
+    gap: 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkout-confirm-btn-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+  }
+
+  .checkout-confirm-btn-icon svg {
+    width: 8px;
+    height: 8px;
+  }
+
+  .checkout-confirm-delivery-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .checkout-confirm-delivery-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .checkout-confirm-delivery-row {
+    gap: 10px;
   }
 }

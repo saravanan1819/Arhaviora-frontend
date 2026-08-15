@@ -193,7 +193,7 @@ export const Personalizer = ({
 
           <div className="pers-cta">
             <Link to="/shop?category=personalized" className="pers-btn-rose">
-              All Personalized Products <span className="pers-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span>
+              All Personalized Products <span className="pers-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span>
             </Link>
           </div>
         </>

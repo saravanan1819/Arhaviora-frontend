@@ -385,3 +385,38 @@
     gap: 12px !important;
   }
 }
+
+@media (max-width: 480px) {
+  .nav-inner-container {
+    padding: 0 16px;
+    height: 64px;
+  }
+
+  .brand-logo-img {
+    height: 44px;
+  }
+
+  .actions-icons-row {
+    gap: 8px !important;
+  }
+
+  .action-icon-link svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-inner-container {
+    padding: 0 12px;
+    height: 58px;
+  }
+
+  .brand-logo-img {
+    height: 38px;
+  }
+
+  .actions-icons-row {
+    gap: 6px !important;
+  }
+}
