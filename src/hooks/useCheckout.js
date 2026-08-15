@@ -115,7 +115,6 @@ export const useCheckout = () => {
     setCurrentStep(CHECKOUT_STEP.ADDRESS);
   }, []);
 
-  /** After confirmation CTAs — keep last order for display/API later, restart flow. */
   const beginNewCheckout = useCallback(() => {
     setCurrentStep(CHECKOUT_STEP.ADDRESS);
   }, []);
@@ -135,8 +134,6 @@ export const useCheckout = () => {
     [addresses, selectedAddressId]
   );
 
-  /** Skip Payment UI for now — snapshot order locally, advance to Confirmation.
-   *  Future: async placeOrder API → setPlacedOrder(serverOrder) → then CONFIRMATION. */
   const confirmOrderSummaryStep = useCallback(
     (cartItems = [], totals = {}) => {
       if (!canProceedFromOrderSummary(cartItems, selectedAddressId, addresses, paymentMethod)) {

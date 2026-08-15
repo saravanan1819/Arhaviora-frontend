@@ -8,15 +8,8 @@ import '../Shop/Shop.css';
 
 const GiftIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="8" width="18" height="4" rx="1"/>
-    <path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5Z"/>
-  </svg>
-);
-
-const EyeIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-    <circle cx="12" cy="12" r="3"/>
+    <rect x="3" y="8" width="18" height="4" rx="1" />
+    <path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5Z" />
   </svg>
 );
 
@@ -247,7 +240,7 @@ export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] })
           <button className="pd-table-expand-btn" onClick={() => setAboutExpanded(e => !e)}>
             <span>{aboutExpanded ? 'View Less' : 'View More'}</span>
             <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style={{ transform: aboutExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-              <path d="M1 1L6 6L11 1" stroke="#545454" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M1 1L6 6L11 1" stroke="#545454" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
         </div>

@@ -1,13 +1,13 @@
 export const BASE_PRODUCTS = [
-  { id: '1',  title: 'Personalized Muslin Baby Blanket',         category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '2',  title: 'Organic Muslin Swaddle & Wrap Set',        category: 'Swaddles & Blankets', age: '0-3', price: 999,  originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '3',  title: 'Embroidered Name Baby Onesie',             category: 'Onesies & Rompers',   age: '3-6', price: 650,  originalPrice: 900,  discount: '28% Off', rating: 4.9, gender: 'girl',    availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_3.png' },
-  { id: '4',  title: 'Bamboo Cotton Romper with Name',           category: 'Onesies & Rompers',   age: '3-6', price: 749,  originalPrice: 1100, discount: '32% Off', rating: 4.6, gender: 'boy',     availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_4.png' },
-  { id: '5',  title: 'Baby Beanie & Mittens Set',                category: 'Accessories & Caps',  age: '0-3', price: 450,  originalPrice: 699,  discount: '36% Off', rating: 4.8, gender: 'unisex',  availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_5.png' },
-  { id: '6',  title: 'Newborn Essentials Gift Hamper',           category: 'Gift Sets',           age: '0-3', price: 2499, originalPrice: 3500, discount: '29% Off', rating: 4.9, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_6.png' },
-  { id: '7',  title: 'Personalised Star Print Blanket',          category: 'Swaddles & Blankets', age: '6-9', price: 1299, originalPrice: 1800, discount: '28% Off', rating: 4.7, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '8',  title: 'Floral Cotton Baby Romper',                category: 'Onesies & Rompers',   age: '6-9', price: 799,  originalPrice: 1200, discount: '33% Off', rating: 4.5, gender: 'girl',    availability: 'pre-order',  imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '9',  title: 'Baby Name Cap & Booties Gift Set',         category: 'Gift Sets',           age: '9-12',price: 1850, originalPrice: 2500, discount: '26% Off', rating: 4.8, gender: 'unisex',  availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_3.png' },
+  { id: '1', title: 'Personalized Muslin Baby Blanket', category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
+  { id: '2', title: 'Organic Muslin Swaddle & Wrap Set', category: 'Swaddles & Blankets', age: '0-3', price: 999, originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_2.png' },
+  { id: '3', title: 'Embroidered Name Baby Onesie', category: 'Onesies & Rompers', age: '3-6', price: 650, originalPrice: 900, discount: '28% Off', rating: 4.9, gender: 'girl', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_3.png' },
+  { id: '4', title: 'Bamboo Cotton Romper with Name', category: 'Onesies & Rompers', age: '3-6', price: 749, originalPrice: 1100, discount: '32% Off', rating: 4.6, gender: 'boy', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_4.png' },
+  { id: '5', title: 'Baby Beanie & Mittens Set', category: 'Accessories & Caps', age: '0-3', price: 450, originalPrice: 699, discount: '36% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_5.png' },
+  { id: '6', title: 'Newborn Essentials Gift Hamper', category: 'Gift Sets', age: '0-3', price: 2499, originalPrice: 3500, discount: '29% Off', rating: 4.9, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_6.png' },
+  { id: '7', title: 'Personalised Star Print Blanket', category: 'Swaddles & Blankets', age: '6-9', price: 1299, originalPrice: 1800, discount: '28% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
+  { id: '8', title: 'Floral Cotton Baby Romper', category: 'Onesies & Rompers', age: '6-9', price: 799, originalPrice: 1200, discount: '33% Off', rating: 4.5, gender: 'girl', availability: 'pre-order', imageUrl: '/assets/images/products/bestseller_2.png' },
+  { id: '9', title: 'Baby Name Cap & Booties Gift Set', category: 'Gift Sets', age: '9-12', price: 1850, originalPrice: 2500, discount: '26% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_3.png' },
 ];
 
 const DEFAULT_DESC = "Ultra- soft organic muslin blanket, specially crafted for your little one. Personalize with your baby's name and create a beautiful keepsake.";
@@ -83,8 +83,8 @@ const DEFAULT_REVIEWS = [
 
 export const ALL_PRODUCTS = Array.from({ length: 85 }, (_, i) => {
   const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
-  return { 
-    ...base, 
+  return {
+    ...base,
     id: String(i + 1),
     description: DEFAULT_DESC,
     details: DEFAULT_DETAILS,

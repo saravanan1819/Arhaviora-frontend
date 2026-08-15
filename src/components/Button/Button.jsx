@@ -5,7 +5,7 @@ import './Button.css';
 export const Button = ({
   children,
   variant = 'primary',
-  size = 'md',        
+  size = 'md',
   icon = true,
   onClick,
   type = 'button',

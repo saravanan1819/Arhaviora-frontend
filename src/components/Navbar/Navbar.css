@@ -245,6 +245,11 @@
   filter: invert(21%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(24%) contrast(100%);
 }
 
+/* Mobile-only search icon — hidden on desktop/tablet landscape */
+.nav-mobile-search {
+  display: none !important;
+}
+
 /* Mobile Hamburger Button */
 .mobile-hamburger-btn {
   display: none;
@@ -288,7 +293,7 @@
   top: 100%;
   left: 0;
   width: 100%;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -309,7 +314,7 @@
   color: #2D2A26;
   text-decoration: none;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .mobile-sub-links {
@@ -332,9 +337,11 @@
   .nav-inner-container {
     padding: 0 32px;
   }
+
   .nav-left-menu {
     gap: 16px !important;
   }
+
   .brand-logo-img {
     height: 68px;
   }
@@ -348,9 +355,55 @@
 
 @media (max-width: 768px) {
   .top-announcement-bar {
-    display: none !important;
+    display: flex !important;
+    height: 32px;
+    padding: 0 12px;
+    overflow: hidden;
+    align-items: center;
   }
 
+  .announcement-inner {
+    display: flex !important;
+    width: 100%;
+    animation: none;
+    gap: 8px;
+    height: 32px;
+    padding: 0;
+    flex-wrap: nowrap;
+    justify-content: space-between !important;
+    align-items: center !important;
+    white-space: nowrap;
+  }
+
+  .anno-pill {
+    flex: 0 1 auto;
+    font-size: 10px;
+    gap: 4px !important;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .anno-pill img {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  .anno-pill span {
+    white-space: nowrap;
+    font-size: 10px;
+    line-height: 1;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .anno-mobile-hide {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
   .nav-left-menu {
     display: none !important;
   }
@@ -358,7 +411,7 @@
   .mobile-hamburger-btn {
     display: flex;
   }
-  
+
   .nav-inner-container {
     padding: 0 24px;
     height: 72px;
@@ -372,13 +425,29 @@
     transform: translate(-50%, -50%);
     z-index: 10;
   }
-  
+
   .brand-logo-img {
-    height: 54px;
+    height: 62px;
   }
-  
+
   .actions-icons-row .action-login-text {
     display: none;
+  }
+
+  .nav-divider {
+    display: none;
+  }
+
+  .nav-search-box {
+    display: none !important;
+  }
+
+  .nav-mobile-search {
+    display: none !important;
+  }
+
+  .nav-account-link {
+    display: inline-flex !important;
   }
 
   .actions-icons-row {
@@ -387,13 +456,38 @@
 }
 
 @media (max-width: 480px) {
+  .top-announcement-bar {
+    height: 30px;
+    padding: 0 10px;
+  }
+
+  .announcement-inner {
+    height: 30px;
+    gap: 8px;
+  }
+
+  .anno-pill {
+    font-size: 10px;
+    gap: 4px !important;
+  }
+
+  .anno-pill img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .anno-pill span {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
   .nav-inner-container {
     padding: 0 16px;
-    height: 64px;
+    height: 68px;
   }
 
   .brand-logo-img {
-    height: 44px;
+    height: 60px;
   }
 
   .actions-icons-row {
@@ -407,13 +501,38 @@
 }
 
 @media (max-width: 360px) {
+  .top-announcement-bar {
+    height: 30px;
+    padding: 0 8px;
+  }
+
+  .announcement-inner {
+    height: 30px;
+    gap: 6px;
+  }
+
+  .anno-pill {
+    font-size: 9.5px;
+    gap: 3px !important;
+  }
+
+  .anno-pill img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .anno-pill span {
+    font-size: 9.5px;
+    white-space: nowrap;
+  }
+
   .nav-inner-container {
     padding: 0 12px;
-    height: 58px;
+    height: 64px;
   }
 
   .brand-logo-img {
-    height: 38px;
+    height: 58px;
   }
 
   .actions-icons-row {

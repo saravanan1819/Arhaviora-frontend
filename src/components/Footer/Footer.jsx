@@ -18,17 +18,17 @@ export const Footer = () => {
   return (
     <footer className="site-footer">
       <div className="footer-container">
-        
+
         {/* Left Panel */}
         <div className="footer-left-panel">
           {/* Available On Block */}
           <div className="available-on-block">
             <span className="available-title">Available On</span>
             <div className="market-badges-row">
-              <a 
-                href="https://amazon.in" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://amazon.in"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="marketplace-badge-link"
                 title="Shop Arhaviora on Amazon"
                 aria-label="Amazon"
@@ -36,10 +36,10 @@ export const Footer = () => {
                 <img src="/assets/icons/amazon.svg" alt="Amazon" className="marketplace-logo-amazon" />
               </a>
 
-              <a 
-                href="https://flipkart.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://flipkart.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="marketplace-badge-link"
                 title="Shop Arhaviora on Flipkart"
                 aria-label="Flipkart"
@@ -88,11 +88,11 @@ export const Footer = () => {
           <div className="newsletter-block">
             <h4 className="newsletter-heading">Join the Arhaviora Family</h4>
             <form className="newsletter-form" onSubmit={handleSubscribe}>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="Enter your email" 
+                placeholder="Enter your email"
                 className="newsletter-input"
                 required
               />

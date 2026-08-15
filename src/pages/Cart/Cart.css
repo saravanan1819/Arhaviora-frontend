@@ -347,7 +347,7 @@
   color: #636372;
 }
 
-.cart-summary-row-muted > span:first-child {
+.cart-summary-row-muted>span:first-child {
   color: #636372;
 }
 
@@ -758,14 +758,137 @@
 
 @media (max-width: 390px) {
   .cart-item-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
     grid-template-areas:
-      "product"
-      "qty"
-      "price";
+      "product product"
+      "qty price";
   }
 
   .cart-col-price {
+    justify-content: flex-end;
+  }
+}
+
+/* 320-wide phones only */
+@media (max-width: 360px) {
+  .cart-page {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .cart-breadcrumb {
+    padding: 4px 12px 0;
+    font-size: 10px;
+    flex-wrap: wrap;
+    row-gap: 2px;
+    max-width: 100%;
+  }
+
+  .cart-body {
+    padding: 12px 12px 28px;
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  .cart-table-card,
+  .cart-summary-card,
+  .cart-secure-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .cart-item-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "product product"
+      "qty price";
+    gap: 12px;
+    padding: 14px 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cart-item-product {
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .cart-item-media {
+    width: 64px;
+    gap: 8px;
+  }
+
+  .cart-item-media,
+  .cart-item-thumb {
+    width: 64px;
+    height: 64px;
+  }
+
+  .cart-item-info {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .cart-item-title {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .cart-item-meta {
+    font-size: 11px;
+  }
+
+  .cart-item-meta-personalization {
+    margin-top: 6px;
+  }
+
+  .cart-item-remove {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .cart-item-remove img {
+    width: 11px;
+    height: 11px;
+  }
+
+  .cart-col-qty {
+    grid-area: qty;
     justify-content: flex-start;
+    align-self: center;
+  }
+
+  .cart-col-price {
+    grid-area: price;
+    justify-content: flex-end;
+    align-self: center;
+    padding-right: 0;
+  }
+
+  .cart-qty-stepper {
+    min-width: 88px;
+    height: 30px;
+  }
+
+  .cart-qty-btn {
+    width: 26px;
+    font-size: 13px;
+  }
+
+  .cart-item-price {
+    font-size: 14px;
+  }
+
+  .cart-summary-card,
+  .cart-secure-card {
+    padding: 14px 12px;
   }
 }

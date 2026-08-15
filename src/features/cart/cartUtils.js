@@ -115,7 +115,6 @@ export const savePricingToStorage = (pricing) => {
   }
 };
 
-/** Seed data only — replace with API cart + pricing responses. */
 export const createSeedCartItems = () => {
   const base = {
     title: 'Personalized Muslin Baby\nBlanket',

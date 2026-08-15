@@ -42,23 +42,22 @@ export const ProductCard = ({
 
   return (
     <div className="product-card-container">
-      {/* Top Image Container with Wishlist */}
       <div className="product-card-media">
         <Link to={`/product/${id}`} className="media-link">
           <img src={imageUrl} alt={title} className="product-image" loading="lazy" />
         </Link>
-        
+
         {/* Wishlist Button */}
-        <button 
+        <button
           className={`wishlist-heart-btn ${isWishlisted ? 'active' : ''}`}
           onClick={handleWishlistClick}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <HeartIcon 
-            size={20} 
-            color={isWishlisted ? '#D44D60' : '#2E2B28'} 
-            fill={isWishlisted ? '#D44D60' : 'none'} 
+          <HeartIcon
+            size={20}
+            color={isWishlisted ? '#D44D60' : '#2E2B28'}
+            fill={isWishlisted ? '#D44D60' : 'none'}
           />
         </button>
 
@@ -99,7 +98,7 @@ export const ProductCard = ({
 
         {/* Action Button */}
         <div className="product-card-action">
-          <button 
+          <button
             className={`quick-add-btn ${addedAnimation ? 'is-added' : ''}`}
             onClick={handleQuickAdd}
           >

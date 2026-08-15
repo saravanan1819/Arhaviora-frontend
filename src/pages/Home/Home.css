@@ -41,12 +41,7 @@
    max-width: 560px;
 }
 
-/* ==========================================
-   BUTTON SYSTEM — Matches Figma exactly:
-   border: 1.5px solid #1C1A17
-   box-shadow: 0px 4px 0px #1C1A17
-   height: 48px, border-radius: 30px (pill)
-   ========================================== */.hp-btn-rose {
+.hp-btn-rose {
    display: inline-flex;
    align-items: center;
    justify-content: center;
@@ -96,7 +91,6 @@
    flex-shrink: 0;
 }
 
-/* Hero secondary button — white outline on dark image */
 .hp-btn-outline-white {
    display: inline-flex;
    align-items: center;
@@ -129,7 +123,6 @@
    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.10);
 }
 
-/* Dark outline button — used in some sections */
 .hp-btn-outline-dark {
    display: inline-flex;
    align-items: center;
@@ -161,7 +154,6 @@
    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Outline rose button — premium outline */
 .hp-btn-outline-rose {
    display: inline-flex;
    align-items: center;
@@ -392,15 +384,10 @@
    overflow: hidden;
 }
 
-/* Collections Track — 4 full cards + 5th peek at 1440px
-   Formula: card = (container - 3gaps - peek) / 4
-   At 1280px content, gap=32px, peek=120px:
-   card = (1280 - 3*32 - 120) / 4 = (1280-96-120)/4 = 1064/4 = 266px
-   But we use fluid calc so it adapts. */
+
 .hp-coll-track {
    --coll-gap: 40px;
    --coll-peek: 120px;
-   /* card width = (100% - 3 gaps - peek) / 4 */
    --coll-card-w: calc((100% - 3 * var(--coll-gap) - var(--coll-peek)) / 4);
    display: flex;
    gap: var(--coll-gap);
@@ -409,7 +396,6 @@
    scroll-snap-type: x mandatory;
    scrollbar-width: none;
    padding-bottom: 4px;
-   /* hide overflow so 5th card only peeks */
    overflow-y: visible;
 }
 
@@ -431,7 +417,7 @@
 
 .hp-coll-card:hover {
    transform: translateY(-4px);
-   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .hp-coll-img {
@@ -446,17 +432,14 @@
    transform: scale(1.06);
 }
 
-/* Figma gradient: rgba(0,0,0,0) 14% → rgba(12,12,12,0.4) 59% → rgba(23,23,23,1) 100% */
 .hp-coll-overlay {
    position: absolute;
    inset: 0;
    padding: 20px 16px 28px;
-   background: linear-gradient(
-      180deg,
-      rgba(0,0,0,0) 14%,
-      rgba(12,12,12,0.40) 59%,
-      rgba(23,23,23,0.95) 100%
-   );
+   background: linear-gradient(180deg,
+         rgba(0, 0, 0, 0) 14%,
+         rgba(12, 12, 12, 0.40) 59%,
+         rgba(23, 23, 23, 0.95) 100%);
    display: flex;
    align-items: flex-end;
    justify-content: center;
@@ -473,7 +456,6 @@
    white-space: pre-wrap;
 }
 
-/* Scroll progress bar below collections */
 .hp-coll-scroll-track {
    position: relative;
    margin: 40px auto 0;
@@ -489,7 +471,6 @@
    position: absolute;
    left: 0;
    top: 0;
-   /* thumb represents 4/total cards visible */
    width: calc(4 / 7 * 100%);
    height: 100%;
    background: #BCD8EC;
@@ -655,9 +636,6 @@
    color: #8E8E93;
 }
 
-/* ADD TO CART button — Figma spec:
-   border: 1px solid #000, box-shadow: 0 4px 0 #000
-   height: 48px, border-radius: 32px, font-size: 16px, font-weight: 700 */
 .hp-bs-atc {
    width: 100%;
    height: 48px;
@@ -1694,11 +1672,12 @@
    z-index: 2;
 }
 
-/* ==========================================================================
-   RESPONSIVE MEDIA QUERIES (DESKTOP, TABLET, MOBILE DOWN TO 320PX)
-   ========================================================================== */
+/* ===========================
+   RESPONSIVE MEDIA 
+   ========================== */
 
 @media (max-width: 1200px) {
+
    .hp-hero,
    .hp-collections,
    .hp-bestsellers,
@@ -1719,13 +1698,16 @@
    .hp-hero {
       padding: 0 24px !important;
    }
+
    .hp-hero-card {
       aspect-ratio: auto;
       height: 480px;
    }
+
    .hp-hero-overlay {
       padding: 0 32px;
    }
+
    .hp-hero-h1 {
       font-size: 48px;
    }
@@ -1754,7 +1736,6 @@
       height: 440px;
    }
 
-   /* Collections at tablet: show 2 cards + peek of 3rd */
    .hp-coll-track {
       --coll-gap: 20px;
       --coll-peek: 80px;
@@ -1808,16 +1789,20 @@
    .hp-hero {
       padding: 0 16px !important;
    }
+
    .hp-hero-card {
       height: 440px;
       border-radius: 24px;
    }
+
    .hp-hero-overlay {
       padding: 0 20px;
    }
+
    .hp-hero-h1 {
       font-size: 36px;
    }
+
    .hp-hero-p {
       font-size: 14px;
    }
@@ -1843,7 +1828,6 @@
       font-size: 34px !important;
    }
 
-   /* Collections at mobile: 1 card + peek */
    .hp-coll-track {
       --coll-gap: 16px;
       --coll-peek: 60px;
@@ -1879,13 +1863,16 @@
       height: 460px;
       border-radius: 18px;
    }
+
    .hp-hero-overlay {
       padding: 0 16px;
    }
+
    .hp-hero-h1 {
       font-size: 28px;
       line-height: 1.2;
    }
+
    .hp-hero-p {
       font-size: 13px;
       margin-bottom: 20px;
@@ -1912,6 +1899,7 @@
       padding: 0 16px 12px;
       margin: 20px 0 0;
    }
+
    .hp-cat-pill {
       flex: none;
       width: 100%;
@@ -1922,7 +1910,7 @@
       padding: 0 20px;
       box-sizing: border-box;
    }
-   
+
    .hp-bs-badge {
       font-size: 11px;
       padding: 4px 10px;
@@ -1939,6 +1927,7 @@
       margin-top: 32px;
       padding: 0 0 8px;
    }
+
    .hp-coll-card {
       flex: 0 0 var(--coll-card-w);
       width: var(--coll-card-w);
@@ -1960,6 +1949,7 @@
       width: 100%;
       gap: 12px;
    }
+
    .hp-cta-btns .hp-btn-rose,
    .hp-cta-btns .hp-btn-outline-rose {
       width: 100%;
@@ -1970,9 +1960,11 @@
    .hp-faq-btn {
       gap: 12px;
    }
+
    .hp-faq-q {
       font-size: 16px;
    }
+
    .hp-faq-ans {
       padding-left: 36px;
    }
@@ -1998,7 +1990,6 @@
       font-size: 26px !important;
    }
 
-   /* Prevent horizontal overflow on very small screens */
    .hp-hero,
    .hp-collections,
    .hp-bestsellers,
@@ -2019,6 +2010,7 @@
       --coll-gap: 12px;
       --coll-peek: 40px;
    }
+
    .hp-coll-card {
       flex: 0 0 var(--coll-card-w);
       width: var(--coll-card-w);
@@ -2031,19 +2023,16 @@
       min-height: unset;
    }
 
-   /* Bestsellers: single column */
    .hp-bs-grid {
       grid-template-columns: 1fr;
       gap: 14px;
    }
 
-   /* Ensure stats bar doesn't overflow */
    .hp-stats-bar {
       padding: 16px 12px;
       gap: 12px;
    }
 
-   /* Quality bar for personalizer on tiny screens */
    .hp-pers-quality-bar {
       gap: 10px;
       font-size: 11px;
@@ -2051,12 +2040,12 @@
       padding: 12px 14px;
    }
 
-   /* CTA buttons full width */
    .hp-cta-btns {
       flex-direction: column;
       width: 100%;
       gap: 10px;
    }
+
    .hp-cta-btns .hp-btn-rose,
    .hp-cta-btns .hp-btn-outline-rose {
       width: 100%;
@@ -2064,43 +2053,41 @@
       box-sizing: border-box;
    }
 
-   /* FAQ tweaks */
    .hp-faq-btn {
       gap: 10px;
    }
+
    .hp-faq-q {
       font-size: 14px;
    }
+
    .hp-faq-ans {
       padding-left: 28px;
    }
 
-   /* Personalizer layout */
    .hp-pers-layout {
       grid-template-columns: 1fr;
       height: auto;
       gap: 20px;
    }
 
-   /* Benefits grid: single column */
    .hp-pers-benefits {
       grid-template-columns: 1fr;
       gap: 12px;
       padding: 14px 12px;
    }
 
-   /* Prevent promise layout overflow */
    .hp-promise-layout {
       grid-template-columns: 1fr;
       gap: 24px;
    }
 
-   /* Hero buttons */
    .hp-hero-btns {
       flex-direction: column;
       width: 100%;
       gap: 8px;
    }
+
    .hp-hero-btns .hp-btn-rose,
    .hp-hero-btns .hp-btn-outline-white {
       width: 100%;
@@ -2108,7 +2095,6 @@
       box-sizing: border-box;
    }
 
-   /* All buttons: compact sizing */
    .hp-btn-rose,
    .hp-btn-outline-white,
    .hp-btn-outline-rose,
