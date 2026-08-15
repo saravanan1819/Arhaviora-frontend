@@ -8,7 +8,7 @@ import './Home.css';
 
 export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wishlist = [] }) => {
   const [customName, setCustomName] = useState('Vivaan');
-  const [activeFaq, setActiveFaq] = useState(0);
+  const [activeFaq, setActiveFaq] = useState(-1);
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -70,7 +70,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
                     <div className="hp-hero-btns">
                       <Link to={slide.ctaLink} className="hp-btn-rose">
                         {slide.ctaText}
-                        <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span>
+                        <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span>
                       </Link>
                       <Link to="/shop" className="hp-btn-outline-white">Explore Collection</Link>
                     </div>
@@ -117,7 +117,8 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             ))}
           </div>
           <div className="hp-coll-scroll-track">
-            <div className="hp-coll-scroll-thumb" style={{ left: `${collScrollProgress * 65}%` }}></div>
+            {/* thumb = 4/7 ≈ 57% width; it moves from 0 to 43% max */}
+            <div className="hp-coll-scroll-thumb" style={{ left: `${collScrollProgress * (100 - (4 / collections.length) * 100)}%` }}></div>
           </div>
         </div>
       </section>
@@ -162,7 +163,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
           })}
         </div>
         <div className="hp-bs-view-all">
-          <Link to="/shop" className="hp-btn-rose">View All Products <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>
+          <Link to="/shop" className="hp-btn-rose">View All Products <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
         </div>
       </section>
 
@@ -178,7 +179,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
               <h3 className="hp-range-title">Baby Clothing</h3>
               <p className="hp-range-desc">Soft, comfortable outfits thoughtfully designed for<br />your little one's everyday moments.</p>
               <Link to="/shop?category=clothing" className="hp-btn-rose">
-                Explore Collection <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span>
+                Explore Collection <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span>
               </Link>
             </div>
           </div>
@@ -188,7 +189,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
               <h3 className="hp-range-title">Maternity Clothing</h3>
               <p className="hp-range-desc">Elegant maternity styles designed for comfort through<br />every stage of motherhood.</p>
               <Link to="/shop?category=maternity" className="hp-btn-rose">
-                Explore Collection <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span>
+                Explore Collection <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span>
               </Link>
             </div>
           </div>
@@ -233,7 +234,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             <div className="hp-gift-overlay">
               <h3 className="hp-gift-title">Newborn Gift Box</h3>
               <p className="hp-gift-desc">Create a personalized gift box filled with newborn essentials.</p>
-              <Link to="/shop?category=newborn" className="hp-btn-rose hp-btn-sm">Build Newborn Gift Box <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>
+              <Link to="/shop?category=newborn" className="hp-btn-rose hp-btn-sm">Build Newborn Gift Box <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
             </div>
           </div>
           <div className="hp-gift-card">
@@ -241,7 +242,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             <div className="hp-gift-overlay">
               <h3 className="hp-gift-title">Baby Shower Gifts</h3>
               <p className="hp-gift-desc">Explore beautifully curated gifts for baby showers and celebrations.</p>
-              <Link to="/shop?category=babyshower" className="hp-btn-rose hp-btn-sm">Explore Baby Shower Gifts <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>
+              <Link to="/shop?category=babyshower" className="hp-btn-rose hp-btn-sm">Explore Baby Shower Gifts <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
             </div>
           </div>
         </div>
@@ -368,7 +369,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             <h2 className="hp-cta-h2">Create Something<br />Truly Yours</h2>
             <p className="hp-cta-p">Personalize A Gift That's Made With Love, Designed To Celebrate Every Little Moment.</p>
             <div className="hp-cta-btns">
-              <Link to="/shop?category=personalized" className="hp-btn-rose">Start Personalizing <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="16" height="16" style={{ display: 'block' }} /></span></Link>
+              <Link to="/shop?category=personalized" className="hp-btn-rose">Start Personalizing <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
               <Link to="/shop" className="hp-btn-outline-rose">Explore Collection</Link>
             </div>
           </div>
