@@ -12,7 +12,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-   const collTrackRef = useRef(null);
+  const collTrackRef = useRef(null);
   const [collScrollProgress, setCollScrollProgress] = useState(0);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -54,8 +54,8 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             }}
           >
             {heroSlides.map((slide, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="hp-hero-card"
                 style={{
                   width: `${100 / heroSlides.length}%`,
@@ -117,7 +117,6 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             ))}
           </div>
           <div className="hp-coll-scroll-track">
-            {/* thumb = 4/7 ≈ 57% width; it moves from 0 to 43% max */}
             <div className="hp-coll-scroll-thumb" style={{ left: `${collScrollProgress * (100 - (4 / collections.length) * 100)}%` }}></div>
           </div>
         </div>
@@ -140,25 +139,25 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
                   </button>
                 </div>
                 <div className="hp-bs-info">
-                <div className="hp-bs-swatches-row">
-                  <div className="hp-bs-swatches">
-                    <span className="hp-swatch" style={{ background: '#A4C8E1' }}></span>
-                    <span className="hp-swatch" style={{ background: '#EDAABB' }}></span>
-                    <span className="hp-swatch" style={{ background: '#A8AA6A' }}></span>
-                    <span className="hp-swatch" style={{ background: '#FCE1B6' }}></span>
-                    <span className="hp-swatch-more">+9 Options</span>
+                  <div className="hp-bs-swatches-row">
+                    <div className="hp-bs-swatches">
+                      <span className="hp-swatch" style={{ background: '#A4C8E1' }}></span>
+                      <span className="hp-swatch" style={{ background: '#EDAABB' }}></span>
+                      <span className="hp-swatch" style={{ background: '#A8AA6A' }}></span>
+                      <span className="hp-swatch" style={{ background: '#FCE1B6' }}></span>
+                      <span className="hp-swatch-more">+9 Options</span>
+                    </div>
+                    <div className="hp-bs-rating">{p.rating} <StarIcon size={14} color="#F5A623" /></div>
                   </div>
-                  <div className="hp-bs-rating">{p.rating} <StarIcon size={14} color="#F5A623" /></div>
+                  <div className="hp-bs-title">{p.title}</div>
+                  <div className="hp-bs-price-row">
+                    <span className="hp-bs-price">₹{p.price}</span>
+                    <span className="hp-bs-orig">₹{p.originalPrice}</span>
+                    <span className="hp-bs-off">({p.discount})</span>
+                  </div>
+                  <button className="hp-bs-atc" onClick={() => onAddToCart(p)}>ADD TO CART</button>
                 </div>
-                <div className="hp-bs-title">{p.title}</div>
-                <div className="hp-bs-price-row">
-                  <span className="hp-bs-price">₹{p.price}</span>
-                  <span className="hp-bs-orig">₹{p.originalPrice}</span>
-                  <span className="hp-bs-off">({p.discount})</span>
-                </div>
-                <button className="hp-bs-atc" onClick={() => onAddToCart(p)}>ADD TO CART</button>
               </div>
-            </div>
             );
           })}
         </div>
@@ -262,10 +261,10 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         <div className="hp-section-pre hp-pre-rose">Testimonials</div>
         <h2 className="hp-section-h2">Loved by Thousands of Happy<br />Parents</h2>
         <div className="hp-test-slider-container">
-          <div 
+          <div
             className="hp-test-track"
-            style={{ 
-              transform: `translateX(calc(-${activeTestimonial * (100 / 3)}% - ${activeTestimonial * 8}px))` 
+            style={{
+              transform: `translateX(calc(-${activeTestimonial * (100 / 3)}% - ${activeTestimonial * 8}px))`
             }}
           >
             {testimonials.map((t) => (
@@ -291,7 +290,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         </div>
         <div className="hp-carousel-dots">
           {[0, 1, 2].map((idx) => (
-            <span 
+            <span
               key={idx}
               className={`hp-dot ${activeTestimonial === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
               onClick={() => setActiveTestimonial(idx)}
@@ -315,7 +314,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         <h2 className="hp-section-h2">See Arhaviora in Real Life</h2>
         <p className="hp-section-sub">Real babies. Real moments. Beautiful personalized memories.</p>
         <div className="hp-reels-slider-container">
-          <div 
+          <div
             className="hp-reels-track"
             style={{ '--active-idx': activeReel }}
           >
@@ -329,7 +328,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         </div>
         <div className="hp-carousel-dots">
           {realLifeVideos.map((_, idx) => (
-            <span 
+            <span
               key={idx}
               className={`hp-dot ${activeReel === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
               onClick={() => setActiveReel(idx)}

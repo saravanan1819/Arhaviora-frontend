@@ -72,7 +72,6 @@ export const createOrderId = () => {
   return `ST-ORD-${suffix}`;
 };
 
-/** Snapshot for confirmation — replace with API order response. */
 export const createOrderConfirmation = ({
   address = null,
   cartItems = [],

@@ -313,31 +313,25 @@
   top: 50%;
   transform: translateY(-50%);
   height: 1px;
-  background: repeating-linear-gradient(
-    to right,
-    #2E2B28 0,
-    #2E2B28 6px,
-    transparent 6px,
-    transparent 10px
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.3) 8%,
-    rgba(0, 0, 0, 1) 22%,
-    rgba(0, 0, 0, 1) 78%,
-    rgba(0, 0, 0, 0.3) 92%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.3) 8%,
-    rgba(0, 0, 0, 1) 22%,
-    rgba(0, 0, 0, 1) 78%,
-    rgba(0, 0, 0, 0.3) 92%,
-    transparent 100%
-  );
+  background: repeating-linear-gradient(to right,
+      #2E2B28 0,
+      #2E2B28 6px,
+      transparent 6px,
+      transparent 10px);
+  -webkit-mask-image: linear-gradient(to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 8%,
+      rgba(0, 0, 0, 1) 22%,
+      rgba(0, 0, 0, 1) 78%,
+      rgba(0, 0, 0, 0.3) 92%,
+      transparent 100%);
+  mask-image: linear-gradient(to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 8%,
+      rgba(0, 0, 0, 1) 22%,
+      rgba(0, 0, 0, 1) 78%,
+      rgba(0, 0, 0, 0.3) 92%,
+      transparent 100%);
 }
 
 .checkout-add-address-btn {
@@ -454,7 +448,6 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
-  /* #D44D60 */
   filter: brightness(0) saturate(100%) invert(40%) sepia(47%) saturate(1200%) hue-rotate(314deg) brightness(95%) contrast(90%);
 }
 
@@ -1020,6 +1013,7 @@
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
+
   .checkout-stepper,
   .checkout-body {
     padding-left: 40px;
@@ -1050,6 +1044,7 @@
 }
 
 @media (max-width: 768px) {
+
   .checkout-stepper,
   .checkout-body {
     padding-left: 24px;
@@ -1205,6 +1200,7 @@
 }
 
 @media (max-width: 480px) {
+
   .checkout-stepper,
   .checkout-body {
     padding-left: 16px;
@@ -1381,11 +1377,12 @@
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    height: 54px;
-    font-size: 13px;
+    height: 60px;
+    min-height: 60px;
+    font-size: 14px;
     padding: 0 16px;
     gap: 8px;
-    border-radius: 12px;
+    border-radius: 999px;
     white-space: nowrap;
     box-sizing: border-box;
     display: flex;
@@ -1416,5 +1413,36 @@
 
   .checkout-confirm-delivery-row {
     gap: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .checkout-confirm-actions {
+    gap: 12px;
+  }
+
+  .checkout-confirm-btn {
+    height: 48px !important;
+    min-height: 48px !important;
+    font-size: 14px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    line-height: 1.2;
+  }
+
+  .checkout-confirm-btn-primary,
+  .checkout-confirm-btn-outline {
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .checkout-confirm-btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .checkout-confirm-btn-icon svg {
+    width: 10px;
+    height: 10px;
   }
 }

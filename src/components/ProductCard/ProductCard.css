@@ -144,7 +144,6 @@
   color: var(--color-primary);
 }
 
-/* Price Row */
 .product-price-row {
   display: flex;
   align-items: baseline;
@@ -176,7 +175,6 @@
   border-radius: 4px;
 }
 
-/* Quick Add Button */
 .product-card-action {
   margin-top: auto;
   padding-top: 8px;

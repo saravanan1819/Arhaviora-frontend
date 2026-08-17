@@ -16,7 +16,6 @@ import {
 export const useCart = () => {
   const [cartItems, setCartItems] = useState(() => {
     const stored = loadCartFromStorage();
-    // null = never stored → seed for demo; [] = intentionally cleared
     return stored !== null ? stored : createSeedCartItems();
   });
 
@@ -62,7 +61,6 @@ export const useCart = () => {
   const applyPromo = useCallback((code) => {
     const promoCode = String(code || '').trim();
     setPricing((prev) => ({ ...prev, promoCode }));
-    // Backend: validate promo and set discount / shipping via setCartPricing
   }, []);
 
   const cartCount = useMemo(() => getCartCount(cartItems), [cartItems]);

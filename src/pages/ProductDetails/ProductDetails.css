@@ -1200,7 +1200,6 @@
     box-sizing: border-box;
   }
 
-  /* CRITICAL: grid children need min-width:0 to shrink below content size */
   .pd-gallery-section {
     min-width: 0;
     width: 100%;
@@ -1318,7 +1317,6 @@
     box-sizing: border-box;
   }
 
-  /* Info banner: 2x2 grid layout strictly bounded */
   .pd-info-banner {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1389,7 +1387,6 @@
     font-size: 26px;
   }
 
-  /* About section — compact height & padding on mobile */
   .pd-about-section {
     padding: 16px 14px;
     margin-left: -14px;

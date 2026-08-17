@@ -27,9 +27,9 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
           </div>
           <div className="anno-pill">
             <img src="/assets/icons/shipping_truck.svg" alt="" width={16} height={16} />
-            <span>Free Shipping on order above ₹999</span>
+            <span>Free Shipping on orders above ₹999</span>
           </div>
-          <div className="anno-pill">
+          <div className="anno-pill anno-mobile-hide">
             <img src="/assets/icons/package.svg" alt="" width={16} height={16} />
             <span>Crafted for little one</span>
           </div>
@@ -40,8 +40,8 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
       <nav className="primary-navbar">
         <div className="nav-inner-container">
           {/* Hamburger Menu Toggle for Mobile */}
-          <button 
-            className="mobile-hamburger-btn" 
+          <button
+            className="mobile-hamburger-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Navigation Menu"
           >
@@ -52,7 +52,7 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
 
           {/* Left Navigation Links */}
           <div className="nav-left-menu">
-            <div 
+            <div
               className="nav-dropdown-holder"
               onMouseEnter={() => setDropdownOpen(true)}
               onMouseLeave={() => setDropdownOpen(false)}
@@ -112,9 +112,14 @@ export const Navbar = ({ cartCount = 0, wishlistCount = 0 }) => {
             </form>
 
             <div className="actions-icons-row">
+              {/* Mobile search icon — only visible on mobile */}
+              <Link to="/shop" className="action-icon-link nav-mobile-search" aria-label="Search" onClick={() => setMobileMenuOpen(false)}>
+                <img src="/assets/icons/search.svg" alt="Search" width="20" height="20" />
+              </Link>
+
               <div className="nav-divider"></div>
 
-              <Link to="/account" className="action-icon-link" aria-label="Account">
+              <Link to="/account" className="action-icon-link nav-account-link" aria-label="Account">
                 <img src="/assets/icons/account.svg" alt="Account" width="20" height="20" />
               </Link>
 

@@ -1,18 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { HeartIcon, StarIcon, ChevronRightIcon } from '../../components/Icons/Icons';
 import './Shop.css';
 
 const BASE_PRODUCTS = [
-  { id: '1',  title: 'Personalized Wildflower Baby Blanket',     category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '2',  title: 'Organic Muslin Swaddle & Wrap Set',        category: 'Swaddles & Blankets', age: '0-3', price: 999,  originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '3',  title: 'Embroidered Name Baby Onesie',             category: 'Onesies & Rompers',   age: '3-6', price: 650,  originalPrice: 900,  discount: '28% Off', rating: 4.9, gender: 'girl',    availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_3.png' },
-  { id: '4',  title: 'Bamboo Cotton Romper with Name',           category: 'Onesies & Rompers',   age: '3-6', price: 749,  originalPrice: 1100, discount: '32% Off', rating: 4.6, gender: 'boy',     availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_4.png' },
-  { id: '5',  title: 'Baby Beanie & Mittens Set',                category: 'Accessories & Caps',  age: '0-3', price: 450,  originalPrice: 699,  discount: '36% Off', rating: 4.8, gender: 'unisex',  availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_5.png' },
-  { id: '6',  title: 'Newborn Essentials Gift Hamper',           category: 'Gift Sets',           age: '0-3', price: 2499, originalPrice: 3500, discount: '29% Off', rating: 4.9, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_6.png' },
-  { id: '7',  title: 'Personalised Star Print Blanket',          category: 'Swaddles & Blankets', age: '6-9', price: 1299, originalPrice: 1800, discount: '28% Off', rating: 4.7, gender: 'unisex',  availability: 'in-stock',   imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '8',  title: 'Floral Cotton Baby Romper',                category: 'Onesies & Rompers',   age: '6-9', price: 799,  originalPrice: 1200, discount: '33% Off', rating: 4.5, gender: 'girl',    availability: 'pre-order',  imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '9',  title: 'Baby Name Cap & Booties Gift Set',         category: 'Gift Sets',           age: '9-12',price: 1850, originalPrice: 2500, discount: '26% Off', rating: 4.8, gender: 'unisex',  availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_3.png' },
+  { id: '1', title: 'Personalized Wildflower Baby Blanket', category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
+  { id: '2', title: 'Organic Muslin Swaddle & Wrap Set', category: 'Swaddles & Blankets', age: '0-3', price: 999, originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_2.png' },
+  { id: '3', title: 'Embroidered Name Baby Onesie', category: 'Onesies & Rompers', age: '3-6', price: 650, originalPrice: 900, discount: '28% Off', rating: 4.9, gender: 'girl', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_3.png' },
+  { id: '4', title: 'Bamboo Cotton Romper with Name', category: 'Onesies & Rompers', age: '3-6', price: 749, originalPrice: 1100, discount: '32% Off', rating: 4.6, gender: 'boy', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_4.png' },
+  { id: '5', title: 'Baby Beanie & Mittens Set', category: 'Accessories & Caps', age: '0-3', price: 450, originalPrice: 699, discount: '36% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_5.png' },
+  { id: '6', title: 'Newborn Essentials Gift Hamper', category: 'Gift Sets', age: '0-3', price: 2499, originalPrice: 3500, discount: '29% Off', rating: 4.9, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_6.png' },
+  { id: '7', title: 'Personalised Star Print Blanket', category: 'Swaddles & Blankets', age: '6-9', price: 1299, originalPrice: 1800, discount: '28% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
+  { id: '8', title: 'Floral Cotton Baby Romper', category: 'Onesies & Rompers', age: '6-9', price: 799, originalPrice: 1200, discount: '33% Off', rating: 4.5, gender: 'girl', availability: 'pre-order', imageUrl: '/assets/images/products/bestseller_2.png' },
+  { id: '9', title: 'Baby Name Cap & Booties Gift Set', category: 'Gift Sets', age: '9-12', price: 1850, originalPrice: 2500, discount: '26% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_3.png' },
 ];
 
 const ALL_PRODUCTS = Array.from({ length: 85 }, (_, i) => {
@@ -20,24 +20,28 @@ const ALL_PRODUCTS = Array.from({ length: 85 }, (_, i) => {
   return { ...base, id: String(i + 1) };
 });
 
-const AGE_OPTIONS  = ['Newborn (0–3 Months)', '3–6 Months', '6–9 Months', '9–12 Months', '1–2 Years'];
-const CATEGORIES   = ['Baby Essentials', 'Baby Clothing', 'New Born Essentials', 'Baby Shower Gifts', 'Nursery Essentials', 'Maternity Clothing', 'Diaper Caddy Organizer'];
-const GENDERS      = ['Girl', 'Boy', 'Unisex'];
+const AGE_OPTIONS = ['Newborn (0–3 Months)', '3–6 Months', '6–9 Months', '9–12 Months', '1–2 Years'];
+const CATEGORIES = ['Baby Essentials', 'Baby Clothing', 'New Born Essentials', 'Baby Shower Gifts', 'Nursery Essentials', 'Maternity Clothing', 'Diaper Caddy Organizer'];
+const GENDERS = ['Girl', 'Boy', 'Unisex'];
 const AVAILABILITY = ['In Stock', 'Ready to Ship', 'Pre Order'];
 const SORT_OPTIONS = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Customer Rating', 'Newest'];
-const PAGE_SIZE    = 9;
-const SWATCHES     = ['#A4C8E1', '#EDAABB', '#A8AA6A', '#FCE1B6'];
+const PAGE_SIZE = 9;
+const SWATCHES = ['#A4C8E1', '#EDAABB', '#A8AA6A', '#FCE1B6'];
 
 /* ── Collapsible Filter Section ── */
 const FilterSection = ({ title, children, defaultOpen = true }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="sp-filter-section">
+    <div className={`sp-filter-section ${open ? 'open' : 'closed'}`}>
       <button className="sp-filter-section-header" onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span className="sp-filter-section-title">{title}</span>
-        <span className="sp-filter-chevron">{open ? '−' : '+'}</span>
+        <span className="sp-filter-chevron sp-mobile-only">
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: open ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 0.3s' }}>
+            <path d="M1 6.5L6 1.5L11 6.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
       </button>
-      {open && <div className="sp-filter-section-body">{children}</div>}
+      <div className="sp-filter-section-body">{children}</div>
     </div>
   );
 };
@@ -97,18 +101,40 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
   const categoryQuery = searchParams.get('category');
   const searchQuery = searchParams.get('search');
 
-  const [sortBy, setSortBy]               = useState('Featured');
-  const [sortOpen, setSortOpen]           = useState(false);
-  const [currentPage, setCurrentPage]     = useState(1);
-  const [priceMin, setPriceMin]           = useState(10);
-  const [priceMax, setPriceMax]           = useState(3500);
-  const [checkedAges, setCheckedAges]     = useState([]);
-  const [checkedCats, setCheckedCats]     = useState([]);
+  const [sortBy, setSortBy] = useState('Featured');
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [priceMin, setPriceMin] = useState(10);
+  const [priceMax, setPriceMax] = useState(3500);
+  const [checkedAges, setCheckedAges] = useState([]);
+  const [checkedCats, setCheckedCats] = useState([]);
   const [checkedGenders, setCheckedGenders] = useState([]);
-  const [checkedAvail, setCheckedAvail]   = useState([]);
+  const [checkedAvail, setCheckedAvail] = useState([]);
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [pageSize, setPageSize] = useState(window.innerWidth <= 768 ? 6 : 9);
+
+  useEffect(() => {
+    const handleResize = () => setPageSize(window.innerWidth <= 768 ? 6 : 9);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (filterOpen) {
+      document.body.classList.add('sp-filter-active');
+    } else {
+      document.body.classList.remove('sp-filter-active');
+    }
+    return () => document.body.classList.remove('sp-filter-active');
+  }, [filterOpen]);
 
   const toggle = (setter, val) =>
     setter(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
+
+  const toggleAccordion = (section) => {
+    setActiveAccordion(prev => prev === section ? null : section);
+  };
 
   const clearFilters = () => {
     setCheckedAges([]); setCheckedCats([]); setCheckedGenders([]); setCheckedAvail([]);
@@ -137,17 +163,17 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
       });
     }
 
-    if (checkedAges.length)    list = list.filter(p => checkedAges.some(a => a.toLowerCase().includes(p.age)));
-    if (checkedCats.length)    list = list.filter(p => checkedCats.includes(p.category));
+    if (checkedAges.length) list = list.filter(p => checkedAges.some(a => a.toLowerCase().includes(p.age)));
+    if (checkedCats.length) list = list.filter(p => checkedCats.includes(p.category));
     if (checkedGenders.length) list = list.filter(p => checkedGenders.map(g => g.toLowerCase()).includes(p.gender));
-    if (sortBy === 'Price: Low to High')  list.sort((a, b) => a.price - b.price);
-    if (sortBy === 'Price: High to Low')  list.sort((a, b) => b.price - a.price);
-    if (sortBy === 'Customer Rating')     list.sort((a, b) => b.rating - a.rating);
+    if (sortBy === 'Price: Low to High') list.sort((a, b) => a.price - b.price);
+    if (sortBy === 'Price: High to Low') list.sort((a, b) => b.price - a.price);
+    if (sortBy === 'Customer Rating') list.sort((a, b) => b.rating - a.rating);
     return list;
   }, [checkedAges, checkedCats, checkedGenders, checkedAvail, priceMin, priceMax, sortBy, searchQuery, categoryQuery]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const goToPage = (p) => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   const handlePriceMin = (e) => { const v = Number(e.target.value); if (v < priceMax) { setPriceMin(v); setCurrentPage(1); } };
@@ -168,24 +194,75 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
       <nav className="sp-breadcrumb" aria-label="breadcrumb">
         <Link to="/" className="sp-bc-link">Home</Link>
         <ChevronRightIcon size={14} color="#8E8E93" />
-        <span className="sp-bc-active">Shop</span>
+        <span className="sp-bcw-active">Shop</span>
       </nav>
+
+      <div className="sp-page-header sp-mobile-only">
+        <h1 className="sp-page-title">Shop</h1>
+        <p className="sp-page-count">{filtered.length} Products</p>
+      </div>
+
+      <div className="sp-sort-bar sp-mobile-sort-bar sp-mobile-only">
+        <div className="sp-sort-wrap">
+          <button
+            className="sp-mobile-filter-toggle"
+            onClick={() => setFilterOpen(o => !o)}
+            aria-label="Toggle Filters"
+          >
+            <svg width="16" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="2" x2="20" y2="2" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="6" cy="2" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+              <line x1="0" y1="8" x2="20" y2="8" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="14" cy="8" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+              <line x1="0" y1="14" x2="20" y2="14" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="8" cy="14" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+            </svg>
+            <span>Filter</span>
+            <span className="sp-filter-dot"></span>
+          </button>
+          <button
+            className="sp-sort-btn"
+            onClick={() => setSortOpen(o => !o)}
+            aria-haspopup="listbox"
+            aria-expanded={sortOpen}
+          >
+            Sort by
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" className={`sp-sort-chevron ${sortOpen ? 'open' : ''}`}><path d="M1 1L6 6L11 1" stroke="#2E2B28" strokeWidth="1.5" strokeLinecap="round" /></svg>
+          </button>
+          {sortOpen && (
+            <ul className="sp-sort-dropdown" role="listbox">
+              {SORT_OPTIONS.map(opt => (
+                <li key={opt} role="option" aria-selected={sortBy === opt} className={sortBy === opt ? 'active' : ''} onClick={() => { setSortBy(opt); setSortOpen(false); setCurrentPage(1); }}>
+                  {opt}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
       <div className="sp-body">
 
+        {/* ── MOBILE FILTER BACKDROP ── */}
+        {filterOpen && <div className="sp-sidebar-backdrop" onClick={() => setFilterOpen(false)} aria-hidden="true" />}
+
         {/* ── LEFT FILTER SIDEBAR ── */}
-        <aside className="sp-sidebar">
+        <aside className={`sp-sidebar ${filterOpen ? 'sp-sidebar-open' : ''}`}>
           <div className="sp-sidebar-card">
+            <div className="sp-sidebar-drag-handle" aria-hidden="true" onClick={() => setFilterOpen(false)}></div>
             <div className="sp-sidebar-header">
-              <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" y1="2" x2="20" y2="2" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round"/>
-                <circle cx="6" cy="2" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4"/>
-                <line x1="0" y1="8" x2="20" y2="8" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round"/>
-                <circle cx="14" cy="8" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4"/>
-                <line x1="0" y1="14" x2="20" y2="14" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round"/>
-                <circle cx="8" cy="14" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4"/>
-              </svg>
-              <span className="sp-sidebar-title">Filter</span>
+              <div className="sp-sidebar-header-left">
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-sidebar-icon">
+                  <line x1="0" y1="2" x2="20" y2="2" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+                  <circle cx="6" cy="2" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+                  <line x1="0" y1="8" x2="20" y2="8" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+                  <circle cx="14" cy="8" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+                  <line x1="0" y1="14" x2="20" y2="14" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
+                  <circle cx="8" cy="14" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
+                </svg>
+                <span className="sp-sidebar-title">Filter</span>
+              </div>
+              <button className="sp-sidebar-clear-btn" onClick={clearFilters}>Clear All</button>
             </div>
 
             <FilterSection title="Age">
@@ -198,23 +275,31 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
             </FilterSection>
 
             <FilterSection title="Price">
-              <label className="sp-filter-checkbox-row">
-                <input type="checkbox" onChange={() => { setPriceMin(10); setPriceMax(500); setCurrentPage(1); }} />
-                <span className="sp-filter-label">Under 500</span>
-              </label>
-              <label className="sp-filter-checkbox-row">
-                <input type="checkbox" onChange={() => { setPriceMin(500); setPriceMax(3500); setCurrentPage(1); }} />
-                <span className="sp-filter-label">Over 500</span>
-              </label>
-              <div className="sp-price-slider-wrap">
-                <div className="sp-price-label-row">
+              <div className="sp-desktop-only">
+                <label className="sp-filter-checkbox-row">
+                  <input type="checkbox" onChange={() => { setPriceMin(10); setPriceMax(500); setCurrentPage(1); }} />
+                  <span className="sp-filter-label">Under 500</span>
+                </label>
+                <label className="sp-filter-checkbox-row">
+                  <input type="checkbox" onChange={() => { setPriceMin(500); setPriceMax(3500); setCurrentPage(1); }} />
+                  <span className="sp-filter-label">Over 500</span>
+                </label>
+                <div className="sp-price-label-row" style={{ marginTop: '12px' }}>
                   <span className="sp-price-label">₹ {priceMin}</span>
                   <span className="sp-price-sep">–</span>
                   <span className="sp-price-label">₹ {priceMax}</span>
                 </div>
+              </div>
+
+              <div className="sp-price-inputs sp-mobile-only">
+                <div className="sp-price-input-box">₹ {priceMin}</div>
+                <div className="sp-price-input-box">₹ {priceMax}</div>
+              </div>
+
+              <div className="sp-price-slider-wrap">
                 <div className="sp-dual-range">
-                  <div 
-                    className="sp-range-track" 
+                  <div
+                    className="sp-range-track"
                     style={{
                       position: 'absolute',
                       top: '50%',
@@ -223,24 +308,24 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
                       height: '4px',
                       transform: 'translateY(-50%)',
                       borderRadius: '2px',
-                      background: `linear-gradient(to right, #E5E5EA ${minPercent}%, #E87722 ${minPercent}%, #E87722 ${maxPercent}%, #E5E5EA ${maxPercent}%)`
+                      background: `linear-gradient(to right, #E5E5EA ${minPercent}%, #D44D60 ${minPercent}%, #D44D60 ${maxPercent}%, #E5E5EA ${maxPercent}%)`
                     }}
                   />
-                  <input 
-                    type="range" 
-                    min="10" 
-                    max="3500" 
-                    value={priceMin} 
-                    onChange={handlePriceMin} 
+                  <input
+                    type="range"
+                    min="10"
+                    max="3500"
+                    value={priceMin}
+                    onChange={handlePriceMin}
                     className="sp-range sp-range-min"
                     style={{ zIndex: priceMin > 1750 ? 5 : 4 }}
                   />
-                  <input 
-                    type="range" 
-                    min="10" 
-                    max="3500" 
-                    value={priceMax} 
-                    onChange={handlePriceMax} 
+                  <input
+                    type="range"
+                    min="10"
+                    max="3500"
+                    value={priceMax}
+                    onChange={handlePriceMax}
                     className="sp-range sp-range-max"
                     style={{ zIndex: priceMin > 1750 ? 4 : 5 }}
                   />
@@ -274,19 +359,92 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
                 </label>
               ))}
             </FilterSection>
+
+            {/* Mobile Footer (Reset & Apply) */}
+            <div className="sp-sidebar-footer">
+              <button className="sp-sidebar-footer-btn sp-sidebar-reset" onClick={clearFilters}>RESET</button>
+              <button className="sp-sidebar-footer-btn sp-sidebar-apply" onClick={() => setFilterOpen(false)}>APPLY FILTERS</button>
+            </div>
+
+            {/* Custom Mobile Filter Footer */}
+            <div className="sp-filter-mobile-footer sp-mobile-only">
+              <div className="sp-fmf-newsletter">
+                <h4>Join the Arhaviora Family <span style={{ color: '#D44D60' }}>♡</span></h4>
+                <div className="sp-fmf-input-wrap">
+                  <input type="email" placeholder="Enter your email" />
+                  <button aria-label="Submit">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="#D44D60" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div className="sp-fmf-accordion">
+                <div className={`sp-fmf-section ${activeAccordion === 'shop' ? 'active' : ''}`}>
+                  <h5 onClick={() => toggleAccordion('shop')}>
+                    Shop
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-fmf-chevron">
+                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </h5>
+                  <ul className="sp-fmf-links">
+                    <li><Link to="/shop?category=personalized">Personalized Gifts</Link></li>
+                    <li><Link to="/shop?category=clothing">Baby Clothing</Link></li>
+                    <li><Link to="/shop?category=maternity">Maternity Dresses</Link></li>
+                    <li><Link to="/shop?category=nursery">Nursery Essentials</Link></li>
+                    <li><Link to="/shop?category=hampers">Gift Boxes</Link></li>
+                    <li><Link to="/shop?category=bestsellers">Best Sellers</Link></li>
+                  </ul>
+                </div>
+
+                <div className={`sp-fmf-section ${activeAccordion === 'company' ? 'active' : ''}`}>
+                  <h5 onClick={() => toggleAccordion('company')}>
+                    Company
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-fmf-chevron">
+                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </h5>
+                  <ul className="sp-fmf-links">
+                    <li><Link to="/about">About Arhaviora</Link></li>
+                    <li><Link to="/story">Our Story</Link></li>
+                    <li><Link to="/contact">Contact Us</Link></li>
+                    <li><Link to="/shipping">Shipping & Returns</Link></li>
+                    <li><Link to="/faqs">FAQs</Link></li>
+                    <li><Link to="/privacy">Privacy Policy</Link></li>
+                  </ul>
+                </div>
+
+                <div className={`sp-fmf-section ${activeAccordion === 'care' ? 'active' : ''}`}>
+                  <h5 onClick={() => toggleAccordion('care')}>
+                    Customer Care
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-fmf-chevron">
+                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </h5>
+                  <ul className="sp-fmf-links">
+                    <li><Link to="/faqs">FAQs</Link></li>
+                    <li><Link to="/shipping">Shipping & Returns</Link></li>
+                    <li><Link to="/track">Track Your Order</Link></li>
+                    <li><Link to="/returns">Return Policy</Link></li>
+                    <li><Link to="/gift-cards">Gift Cards</Link></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
           </div>
         </aside>
 
         {/* ── RIGHT GRID AREA ── */}
-        <main className="sp-main">
+        <main className={`sp-main ${filterOpen ? 'sp-hidden-mobile' : ''}`}>
 
-          {/* Sort Bar */}
           <div className="sp-sort-bar">
-            <p className="sp-count">Selected Products: <strong>{filtered.length}</strong></p>
+            <p className="sp-count sp-desktop-only">Selected Products: <strong>{filtered.length}</strong></p>
             <div className="sp-sort-wrap">
-              <button className="sp-sort-btn" onClick={() => setSortOpen(o => !o)} aria-haspopup="listbox" aria-expanded={sortOpen}>
+              <button className="sp-sort-btn sp-desktop-only" onClick={() => setSortOpen(o => !o)} aria-haspopup="listbox" aria-expanded={sortOpen}>
                 Sort by
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" className={`sp-sort-chevron ${sortOpen ? 'open' : ''}`}><path d="M1 1L6 6L11 1" stroke="#2E2B28" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" className={`sp-sort-chevron ${sortOpen ? 'open' : ''}`}><path d="M1 1L6 6L11 1" stroke="#2E2B28" strokeWidth="1.5" strokeLinecap="round" /></svg>
               </button>
               {sortOpen && (
                 <ul className="sp-sort-dropdown" role="listbox">
@@ -304,12 +462,12 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
           {paginated.length > 0 ? (
             <div className="sp-product-grid">
               {paginated.map(p => (
-                <ShopCard 
-                  key={p.id} 
-                  product={p} 
-                  onAddToCart={onAddToCart} 
-                  onToggleWishlist={onToggleWishlist} 
-                  isWishlisted={wishlist.includes(p.id)} 
+                <ShopCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={onAddToCart}
+                  onToggleWishlist={onToggleWishlist}
+                  isWishlisted={wishlist.includes(p.id)}
                 />
               ))}
             </div>
