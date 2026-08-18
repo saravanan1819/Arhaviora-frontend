@@ -13,6 +13,8 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
   const [subscribed, setSubscribed] = useState(false);
 
   const collTrackRef = useRef(null);
+  const testTrackRef = useRef(null);
+  const reelTrackRef = useRef(null);
   const [collScrollProgress, setCollScrollProgress] = useState(0);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -27,6 +29,56 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         setCollScrollProgress(scrollLeft / maxScroll);
       }
     }
+  };
+
+  const handleTestScroll = () => {
+    if (!testTrackRef.current) return;
+
+    const firstCard = testTrackRef.current.querySelector('.hp-test-card');
+    if (!firstCard) return;
+
+    const gap = parseFloat(getComputedStyle(testTrackRef.current).columnGap || '0');
+    const step = firstCard.offsetWidth + gap;
+    if (step > 0) {
+      setActiveTestimonial(Math.round(testTrackRef.current.scrollLeft / step));
+    }
+  };
+
+  const scrollToTestimonial = (idx) => {
+    const track = testTrackRef.current;
+    const target = track?.children[idx];
+    if (!track || !target) return;
+
+    track.scrollTo({
+      left: target.offsetLeft,
+      behavior: 'smooth'
+    });
+    setActiveTestimonial(idx);
+  };
+
+  const handleReelScroll = () => {
+    if (!reelTrackRef.current) return;
+
+    const firstCard = reelTrackRef.current.querySelector('.hp-reel-card');
+    if (!firstCard) return;
+
+    const gap = parseFloat(getComputedStyle(reelTrackRef.current).columnGap || '0');
+    const step = firstCard.offsetWidth + gap;
+    if (step > 0) {
+      setActiveReel(Math.round(reelTrackRef.current.scrollLeft / step));
+    }
+  };
+
+  const scrollToReel = (idx) => {
+    const track = reelTrackRef.current;
+    const target = track?.children[idx];
+    if (!track || !target) return;
+
+    track.scrollTo({
+      left: target.offsetLeft,
+      behavior: 'smooth'
+    });
+    setActiveReel(idx);
   };
 
   const handleSubscribe = (e) => {
@@ -262,10 +314,9 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         <h2 className="hp-section-h2">Loved by Thousands of Happy<br />Parents</h2>
         <div className="hp-test-slider-container">
           <div
+            ref={testTrackRef}
             className="hp-test-track"
-            style={{
-              transform: `translateX(calc(-${activeTestimonial * (100 / 3)}% - ${activeTestimonial * 8}px))`
-            }}
+            onScroll={handleTestScroll}
           >
             {testimonials.map((t) => (
               <div key={t.id} className="hp-test-card">
@@ -289,11 +340,11 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
           </div>
         </div>
         <div className="hp-carousel-dots">
-          {[0, 1, 2].map((idx) => (
+          {testimonials.map((_, idx) => (
             <span
               key={idx}
               className={`hp-dot ${activeTestimonial === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
-              onClick={() => setActiveTestimonial(idx)}
+              onClick={() => scrollToTestimonial(idx)}
               style={{ cursor: 'pointer' }}
             ></span>
           ))}
@@ -315,8 +366,9 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
         <p className="hp-section-sub">Real babies. Real moments. Beautiful personalized memories.</p>
         <div className="hp-reels-slider-container">
           <div
+            ref={reelTrackRef}
             className="hp-reels-track"
-            style={{ '--active-idx': activeReel }}
+            onScroll={handleReelScroll}
           >
             {realLifeVideos.map((v) => (
               <div key={v.id} className="hp-reel-card">
@@ -331,7 +383,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
             <span
               key={idx}
               className={`hp-dot ${activeReel === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
-              onClick={() => setActiveReel(idx)}
+              onClick={() => scrollToReel(idx)}
               style={{ cursor: 'pointer' }}
             ></span>
           ))}

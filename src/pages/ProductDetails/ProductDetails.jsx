@@ -28,10 +28,10 @@ const FONTS = [
 ];
 
 const INFO_GRID = [
-  { icon: <img src="/assets/icons/shipping_truck.svg" alt="Shipping" width="24" height="24" />, label: 'Ships in 3–5 days' },
-  { icon: <img src="/assets/icons/package.svg" alt="Premium Packaging" width="24" height="24" />, label: 'Premium Packaging' },
-  { icon: <img src="/assets/icons/package.svg" alt="Easy Returns" width="24" height="24" />, label: 'Easy Returns' },
-  { icon: <img src="/assets/icons/package.svg" alt="Secure Payment" width="24" height="24" />, label: 'Secure Payment' }
+  { icon: <img src="/assets/icons/shipping_truck.svg" alt="Shipping" width="24" height="24" />, title: 'Ships in 3–5 days', subtitle: 'Delivered with care' },
+  { icon: <img src="/assets/icons/package.svg" alt="Premium Packaging" width="24" height="24" />, title: 'Premium Packaging', subtitle: 'Gift ready box' },
+  { icon: <img src="/assets/icons/package.svg" alt="Easy Returns" width="24" height="24" />, title: 'Easy Returns', subtitle: 'Simple support' },
+  { icon: <img src="/assets/icons/package.svg" alt="Secure Payment" width="24" height="24" />, title: 'Secure Payment', subtitle: 'Safe checkout' }
 ];
 
 export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
@@ -206,7 +206,10 @@ export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] })
               <React.Fragment key={idx}>
                 <div className="pd-info-banner-item">
                   <div className="pd-info-banner-icon">{item.icon}</div>
-                  <span className="pd-info-banner-label">{item.label}</span>
+                  <div className="pd-info-banner-text">
+                    <span className="pd-info-banner-label">{item.title}</span>
+                    <span className="pd-info-banner-sub">{item.subtitle}</span>
+                  </div>
                 </div>
                 {idx < INFO_GRID.length - 1 && <div className="pd-info-banner-divider" />}
               </React.Fragment>
