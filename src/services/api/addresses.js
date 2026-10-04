@@ -13,7 +13,7 @@ export const toCountryCode = (country = '') => {
 export const toAddressPayload = (form = {}) => ({
   label: form.label || null,
   recipientName: form.fullName,
-  phone: form.phone,
+  phone: typeof form.phone === 'string' ? form.phone.trim() : form.phone,
   addressLine1: form.line1,
   addressLine2: form.line2 || null,
   city: form.city,

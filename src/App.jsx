@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar/Navbar';
 import { Footer } from './components/Footer/Footer';
 import { Home } from './pages/Home/Home';
@@ -20,18 +20,22 @@ import { useWishlist } from './hooks/useWishlist';
 
 function AppLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { status: authStatus, isAuthenticated } = useAuth();
 
   const {
-    cartItems,
+    cart,
+    loading: cartLoading,
+    error: cartError,
+    busy: cartBusy,
     cartCount,
-    totals,
+    reload: reloadCart,
     addToCart,
     updateQuantity,
     removeItem,
   } = useCart();
 
-  const { currentStep, goToAddressStep } = useCheckout();
-  const { status: authStatus, isAuthenticated } = useAuth();
+  const checkout = useCheckout();
 
   const [notification, setNotification] = useState(null);
 
@@ -42,22 +46,34 @@ function AppLayout() {
 
   const { productIds: wishlist, toggle: toggleWishlist } = useWishlist({ onMessage: showToast });
 
-  // Only variant-backed lines (from the product page) can be added.
-  const handleAddToCart = (product) => {
-    if (!product?.productVariantId) return;
-    addToCart(product);
-    showToast(`"${product.title}" added to your cart!`);
+  // Resolves true when the backend accepted the item. Only variant-backed lines
+  // (from the product page) can be added, and only by a signed-in user.
+  const handleAddToCart = async (product) => {
+    if (!product?.productVariantId) return false;
+    if (!isAuthenticated) {
+      showToast('Please sign in to add items to your cart.');
+      navigate('/login', { state: { from: location.pathname } });
+      return false;
+    }
+    const result = await addToCart(product);
+    showToast(result.ok ? `"${product.title}" added to your cart!` : result.error.message);
+    return result.ok;
   };
 
-  const handleRemoveItem = (productId) => {
-    removeItem(productId);
-    showToast('Item removed from cart');
+  const handleUpdateQuantity = async (cartItemId, quantity) => {
+    const result = await updateQuantity(cartItemId, quantity);
+    if (!result.ok) showToast(result.error.message);
+  };
+
+  const handleRemoveItem = async (cartItemId) => {
+    const result = await removeItem(cartItemId);
+    showToast(result.ok ? 'Item removed from cart' : result.error.message);
   };
 
   const handleToggleWishlist = (productId, isAdded) => toggleWishlist(productId, isAdded);
 
   const handleProceedToCheckout = () => {
-    goToAddressStep();
+    checkout.goToAddressStep();
     navigate('/checkout');
   };
 
@@ -66,6 +82,7 @@ function AppLayout() {
       {notification && (
         <div
           className="app-toast"
+          role="status"
           style={{
             position: 'fixed',
             bottom: '24px',
@@ -99,16 +116,17 @@ function AppLayout() {
           />
           <Route
             path="/shop"
+            element={<Shop onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />}
+          />
+          <Route
+            path="/product/:slug"
             element={
-              <Shop
+              <ProductDetails
+                onAddToCart={handleAddToCart}
                 onToggleWishlist={handleToggleWishlist}
                 wishlist={wishlist}
               />
             }
-          />
-          <Route 
-            path="/product/:slug" 
-            element={<ProductDetails onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />} 
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -116,11 +134,14 @@ function AppLayout() {
             path="/cart"
             element={
               <Cart
-                cartItems={cartItems}
-                totals={totals}
-                onUpdateQuantity={updateQuantity}
+                authStatus={authStatus}
+                cart={cart}
+                loading={cartLoading}
+                error={cartError}
+                busy={cartBusy}
+                onReload={reloadCart}
+                onUpdateQuantity={handleUpdateQuantity}
                 onRemoveItem={handleRemoveItem}
-                isAuthenticated={isAuthenticated}
                 onProceedToCheckout={handleProceedToCheckout}
               />
             }
@@ -130,9 +151,18 @@ function AppLayout() {
             element={
               <Checkout
                 steps={CHECKOUT_STEPS}
-                activeStep={currentStep}
+                activeStep={checkout.currentStep}
                 authStatus={authStatus}
-                cartItems={cartItems}
+                cart={cart}
+                cartLoading={cartLoading}
+                cartError={cartError}
+                onReloadCart={reloadCart}
+                selectedAddressId={checkout.selectedAddressId}
+                selectedAddress={checkout.selectedAddress}
+                onSelectAddress={checkout.selectAddress}
+                onAddressesLoaded={checkout.handleAddressesLoaded}
+                onContinue={checkout.goToSummaryStep}
+                onChangeAddress={checkout.goToAddressStep}
               />
             }
           />

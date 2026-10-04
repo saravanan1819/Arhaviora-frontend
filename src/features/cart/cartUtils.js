@@ -1,84 +1,71 @@
-export const CART_STORAGE_KEY = 'arhaviora_cart_v3';
 export const DEFAULT_CART_THUMB = '/assets/images/products/bestseller_1.png';
 
-const personalizationOf = (product) =>
-  String(product.personalizationText ?? product.name ?? '').trim();
+// The backend cart returns variant ids, quantities and prices but no product
+// name or image. Presentation-only details (never prices or quantities) are
+// remembered per variant when an item is added, so the cart can show them.
+export const DISPLAY_STORAGE_KEY = 'arhaviora_cart_display_v1';
 
-const cartLineId = (product) =>
-  product.productVariantId
-    ? `${product.productVariantId}|${personalizationOf(product)}`
-    : String(product.id);
-
-export const normalizeCartItem = (product = {}) => ({
-  id: cartLineId(product),
-  productId: product.productId != null ? String(product.productId) : String(product.id),
-  productSlug: product.productSlug || null,
-  productVariantId: product.productVariantId || null,
-  title: product.title || '',
-  price: Number(product.price) || 0,
-  quantity: Math.max(1, Number(product.quantity) || 1),
-  color: product.variantLabel || product.color || '',
-  name: personalizationOf(product),
-  category: product.category || '',
-  imageUrl: product.imageUrl || DEFAULT_CART_THUMB,
-});
-
-export const getCartCount = (items = []) =>
-  items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
-
-export const getCartSubtotal = (items = []) =>
-  items.reduce(
-    (sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0),
-    0
-  );
-
-// Display estimate only; the backend checkout summary is authoritative.
-export const getCartTotals = (items = []) => {
-  const subtotal = getCartSubtotal(items);
-  return { subtotal, total: subtotal };
-};
-
-export const addItemToCart = (items, product) => {
-  const incoming = normalizeCartItem(product);
-  const existing = items.find((item) => item.id === incoming.id);
-
-  if (existing) {
-    return items.map((item) =>
-      item.id === incoming.id
-        ? { ...item, quantity: item.quantity + incoming.quantity }
-        : item
-    );
-  }
-
-  return [...items, incoming];
-};
-
-export const updateCartItemQuantity = (items, productId, quantity) =>
-  items.map((item) =>
-    item.id === productId
-      ? { ...item, quantity: Math.max(1, Number(quantity) || 1) }
-      : item
-  );
-
-export const removeCartItem = (items, productId) =>
-  items.filter((item) => item.id !== productId);
-
-export const loadCartFromStorage = () => {
+const loadDisplay = () => {
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return null;
-    return parsed.map(normalizeCartItem);
+    const parsed = JSON.parse(localStorage.getItem(DISPLAY_STORAGE_KEY) || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
   } catch {
-    return null;
+    return {};
   }
 };
 
-export const saveCartToStorage = (items) => {
+export const rememberDisplay = (productVariantId, details) => {
   try {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    const all = loadDisplay();
+    all[productVariantId] = {
+      title: details.title || '',
+      imageUrl: details.imageUrl || '',
+      productSlug: details.productSlug || '',
+      option: details.variantLabel || '',
+      category: details.category || '',
+    };
+    localStorage.setItem(DISPLAY_STORAGE_KEY, JSON.stringify(all));
   } catch {
     /* storage unavailable */
   }
 };
+
+export const clearDisplay = () => {
+  try {
+    localStorage.removeItem(DISPLAY_STORAGE_KEY);
+  } catch {
+    /* storage unavailable */
+  }
+};
+
+// Backend cart -> view model. Prices stay as the backend's decimal strings.
+export const toCartView = (cart) => {
+  const display = loadDisplay();
+  const items = (cart?.items || []).map((item) => {
+    const d = display[item.productVariantId] || {};
+    return {
+      id: item.id,
+      productVariantId: item.productVariantId,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      lineTotal: item.lineTotal,
+      title: d.title || 'Product',
+      imageUrl: d.imageUrl || DEFAULT_CART_THUMB,
+      productSlug: d.productSlug || null,
+      option: d.option || '',
+      category: d.category || '',
+      personalization: item.personalizationText || '',
+    };
+  });
+  return {
+    id: cart?.id ?? null,
+    items,
+    giftBoxCount: (cart?.giftBoxes || []).length,
+    itemsSubtotal: cart?.itemsSubtotal ?? '0.00',
+    giftBoxesSubtotal: cart?.giftBoxesSubtotal ?? '0.00',
+    total: cart?.total ?? '0.00',
+  };
+};
+
+export const getCartCount = (items = []) =>
+  items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);

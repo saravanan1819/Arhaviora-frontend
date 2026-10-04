@@ -7,6 +7,7 @@ const LEGACY_KEYS = [
   'arhaviora_payment_method_v1',
   'arhaviora_last_order_v1',
   'arhaviora_cart_pricing_v3',
+  'arhaviora_cart_v3',
 ];
 
 export const purgeLegacyStorage = () => {

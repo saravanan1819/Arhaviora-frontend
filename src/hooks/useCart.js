@@ -1,41 +1,79 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  addItemToCart,
-  getCartCount,
-  getCartTotals,
-  loadCartFromStorage,
-  removeCartItem,
-  saveCartToStorage,
-  updateCartItemQuantity,
-} from '../features/cart/cartUtils';
+import { useAuth } from '../features/auth/AuthContext';
+import * as cartApi from '../services/api/cart';
+import { toApiError } from '../services/api/errors';
+import { clearDisplay, getCartCount, rememberDisplay, toCartView } from '../features/cart/cartUtils';
 
-// Browser-local cart (display estimate only). The backend cart requires an
-// authenticated session, so nothing here is ever treated as an order.
+// Backend cart (authenticated). Every mutation resolves to the full backend cart,
+// which is the single source of truth for items, prices and totals.
 export const useCart = () => {
-  const [cartItems, setCartItems] = useState(() => loadCartFromStorage() ?? []);
+  const { status, isAuthenticated } = useAuth();
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    return cartApi
+      .getCart()
+      .then((data) => setCart(toCartView(data.cart)))
+      .catch((e) => setError(toApiError(e)))
+      .finally(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
-    saveCartToStorage(cartItems);
-  }, [cartItems]);
+    if (status === 'loading') return;
+    if (!isAuthenticated) {
+      setCart(null);
+      setError(null);
+      setLoading(false);
+      clearDisplay();
+      return;
+    }
+    load();
+  }, [status, isAuthenticated, load]);
 
-  const addToCart = useCallback((product) => {
-    setCartItems((prev) => addItemToCart(prev, product));
+  // Runs a mutation; returns { ok, error }.
+  const mutate = useCallback(async (request, onDone) => {
+    setBusy(true);
+    try {
+      const data = await request();
+      setCart(toCartView(data.cart));
+      onDone?.();
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: toApiError(e) };
+    } finally {
+      setBusy(false);
+    }
   }, []);
 
-  const updateQuantity = useCallback((productId, quantity) => {
-    setCartItems((prev) => updateCartItemQuantity(prev, productId, quantity));
-  }, []);
+  const addToCart = useCallback(
+    (product) =>
+      mutate(
+        () =>
+          cartApi.addCartItem({
+            productVariantId: product.productVariantId,
+            quantity: product.quantity,
+            personalizationText: product.personalizationText,
+          }),
+        () => rememberDisplay(product.productVariantId, product)
+      ),
+    [mutate]
+  );
 
-  const removeItem = useCallback((productId) => {
-    setCartItems((prev) => removeCartItem(prev, productId));
-  }, []);
+  const updateQuantity = useCallback(
+    (cartItemId, quantity) => mutate(() => cartApi.updateCartItem(cartItemId, quantity)),
+    [mutate]
+  );
+  const removeItem = useCallback((cartItemId) => mutate(() => cartApi.removeCartItem(cartItemId)), [mutate]);
+  const clearCart = useCallback(() => mutate(() => cartApi.clearCart()), [mutate]);
 
-  const clearCart = useCallback(() => setCartItems([]), []);
+  const cartCount = useMemo(() => getCartCount(cart?.items), [cart]);
 
-  const cartCount = useMemo(() => getCartCount(cartItems), [cartItems]);
-  const totals = useMemo(() => getCartTotals(cartItems), [cartItems]);
-
-  return { cartItems, cartCount, totals, addToCart, updateQuantity, removeItem, clearCart };
+  return { cart, loading, error, busy, cartCount, reload: load, addToCart, updateQuantity, removeItem, clearCart };
 };
 
 export default useCart;

@@ -88,9 +88,9 @@ export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] })
   const discount = variant ? discountPercent(variant.price, variant.compareAtPrice) : 0;
   const canAdd = Boolean(variant);
 
-  const addCurrentSelection = () => {
+  const addCurrentSelection = async () => {
     if (!variant) return false;
-    onAddToCart({
+    return onAddToCart({
       productId: product.id,
       productSlug: product.slug,
       productVariantId: variant.id,
@@ -102,11 +102,10 @@ export const ProductDetails = ({ onAddToCart, onToggleWishlist, wishlist = [] })
       category: product.category?.name || '',
       variantLabel: product.variants.length > 1 ? variantLabel(variant) : '',
     });
-    return true;
   };
 
-  const handleBuyNow = () => {
-    if (addCurrentSelection()) navigate('/cart');
+  const handleBuyNow = async () => {
+    if (await addCurrentSelection()) navigate('/cart');
   };
 
   return (

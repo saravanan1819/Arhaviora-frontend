@@ -10,3 +10,10 @@ export const formatCartTitle = (title = '') => {
 };
 
 export const flatTitle = (title = '') => title.replace(/\n/g, ' ').trim();
+
+// Display formatting for backend money strings (e.g. "499.00"); never used to compute totals.
+export const formatMoney = (value) => {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '';
+  return `₹${n.toLocaleString('en-IN', { minimumFractionDigits: n % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })}`;
+};

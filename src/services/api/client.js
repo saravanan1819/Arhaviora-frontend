@@ -14,9 +14,37 @@ export const apiClient = axios.create({
   headers: { Accept: 'application/json' },
 });
 
+// Access tokens are short-lived httpOnly cookies. On a 401 from a data request,
+// ask the existing /auth/refresh endpoint for a new cookie once (shared across
+// concurrent requests) and replay the request. Auth endpoints are never retried.
+let refreshing = null;
+const refreshSession = () => {
+  if (!refreshing) {
+    refreshing = apiClient
+      .post('/auth/refresh', null, { _skipRefresh: true })
+      .finally(() => {
+        refreshing = null;
+      });
+  }
+  return refreshing;
+};
+
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(toApiError(error))
+  async (error) => {
+    const config = error?.config;
+    const isAuthUrl = typeof config?.url === 'string' && config.url.startsWith('/auth/');
+    if (error?.response?.status === 401 && config && !config._retried && !config._skipRefresh && !isAuthUrl) {
+      config._retried = true;
+      try {
+        await refreshSession();
+        return apiClient(config);
+      } catch {
+        /* fall through to the original 401 */
+      }
+    }
+    return Promise.reject(toApiError(error));
+  }
 );
 
 // All success responses are { success, message, data }.

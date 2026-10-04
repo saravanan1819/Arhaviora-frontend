@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRightIcon } from '../../components/Icons/Icons';
-import { formatINR, formatItemPrice, formatCartTitle, flatTitle } from '../../utils/currency';
+import { StatusPanel } from '../../components/StatusPanel/StatusPanel';
+import { formatMoney, formatCartTitle, flatTitle } from '../../utils/currency';
 import './Cart.css';
 
 export const Cart = ({
-  cartItems = [],
-  totals = {},
+  authStatus,
+  cart,
+  loading = false,
+  error = null,
+  busy = false,
+  onReload,
   onUpdateQuantity,
   onRemoveItem,
-  isAuthenticated = false,
   onProceedToCheckout,
 }) => {
   const navigate = useNavigate();
@@ -21,19 +25,52 @@ export const Cart = ({
     navigate('/checkout');
   };
 
-  const { subtotal = 0, total = 0 } = totals;
+  const cartItems = cart?.items || [];
 
+  const breadcrumb = (
+    <nav className="cart-breadcrumb" aria-label="breadcrumb">
+      <Link to="/" className="cart-bc-link">Home</Link>
+      <ChevronRightIcon size={14} className="cart-bc-chevron" />
+      <Link to="/shop" className="cart-bc-link">Shop</Link>
+      <ChevronRightIcon size={14} className="cart-bc-chevron" />
+      <span className="cart-bc-active">Cart</span>
+    </nav>
+  );
 
+  const stateView = (node) => (
+    <div className="cart-page">
+      {breadcrumb}
+      <div className="status-page">{node}</div>
+      <div className="cart-footer-separator" />
+    </div>
+  );
+
+  if (authStatus === 'loading') return stateView(<StatusPanel>Loading…</StatusPanel>);
+  if (authStatus !== 'authenticated') {
+    return stateView(
+      <StatusPanel
+        title="Sign in to view your cart"
+        actions={[
+          { label: 'Sign in', to: '/login', state: { from: '/cart' } },
+          { label: 'Continue Shopping', to: '/shop', outline: true },
+        ]}
+      >
+        Your cart is saved to your account.
+      </StatusPanel>
+    );
+  }
+  if (loading && !cart) return stateView(<StatusPanel>Loading your cart…</StatusPanel>);
+  if (error && !cart) {
+    return stateView(
+      <StatusPanel role="alert" title="We couldn't load your cart" actions={[{ label: 'Try again', onClick: onReload }]}>
+        {error.message}
+      </StatusPanel>
+    );
+  }
   if (cartItems.length === 0) {
     return (
       <div className="cart-page">
-        <nav className="cart-breadcrumb" aria-label="breadcrumb">
-          <Link to="/" className="cart-bc-link">Home</Link>
-          <ChevronRightIcon size={14} className="cart-bc-chevron" />
-          <Link to="/shop" className="cart-bc-link">Shop</Link>
-          <ChevronRightIcon size={14} className="cart-bc-chevron" />
-          <span className="cart-bc-active">Cart</span>
-        </nav>
+        {breadcrumb}
         <div className="cart-empty">
           <p className="cart-empty-text">Your cart is empty.</p>
           <Link to="/shop" className="cart-empty-cta">Continue Shopping</Link>
@@ -98,6 +135,7 @@ export const Cart = ({
                     <button
                       type="button"
                       className="cart-item-remove"
+                      disabled={busy}
                       onClick={() => onRemoveItem?.(item.id)}
                     >
                       <img src="/assets/icons/trash.svg" alt="" width={12} height={12} />
@@ -107,14 +145,14 @@ export const Cart = ({
 
                   <div className="cart-item-info">
                     <p className="cart-item-title">{formatCartTitle(item.title)}</p>
-                    {item.color ? (
+                    {item.option ? (
                       <p className="cart-item-meta cart-item-meta-color">
-                        Option : <span>{item.color}</span>
+                        Option : <span>{item.option}</span>
                       </p>
                     ) : null}
-                    {item.name ? (
+                    {item.personalization ? (
                       <p className="cart-item-meta cart-item-meta-personalization">
-                        Personalization : <span>{item.name}</span>
+                        Personalization : <span>{item.personalization}</span>
                       </p>
                     ) : null}
                   </div>
@@ -130,7 +168,7 @@ export const Cart = ({
                       type="button"
                       className="cart-qty-btn"
                       aria-label="Decrease quantity"
-                      disabled={item.quantity <= 1}
+                      disabled={busy || item.quantity <= 1}
                       onClick={() =>
                         onUpdateQuantity?.(item.id, Math.max(1, item.quantity - 1))
                       }
@@ -144,6 +182,7 @@ export const Cart = ({
                       type="button"
                       className="cart-qty-btn"
                       aria-label="Increase quantity"
+                      disabled={busy}
                       onClick={() => onUpdateQuantity?.(item.id, item.quantity + 1)}
                     >
                       +
@@ -152,7 +191,7 @@ export const Cart = ({
                 </div>
 
                 <div className="cart-col-price">
-                  <span className="cart-item-price">{formatItemPrice(item.price)}</span>
+                  <span className="cart-item-price">{formatMoney(item.unitPrice)}</span>
                 </div>
               </li>
             ))}
@@ -165,24 +204,29 @@ export const Cart = ({
 
             <div className="cart-summary-rows">
               <div className="cart-summary-row">
-                <span>Estimated subtotal</span>
-                <span>{formatINR(subtotal)}</span>
+                <span>Subtotal</span>
+                <span>{formatMoney(cart.itemsSubtotal)}</span>
               </div>
+              {cart.giftBoxCount > 0 && (
+                <div className="cart-summary-row">
+                  <span>Gift boxes</span>
+                  <span>{formatMoney(cart.giftBoxesSubtotal)}</span>
+                </div>
+              )}
               <div className="cart-summary-row cart-summary-total">
                 <span>Total</span>
-                <span className="cart-total-value">{formatINR(total)}</span>
+                <span className="cart-total-value">{formatMoney(cart.total)}</span>
               </div>
             </div>
 
-            {!isAuthenticated && (
-              <p role="status" style={{ fontSize: 13, color: '#7A7770', margin: '0 0 12px' }}>
-                Sign in to check out. Prices shown are estimates; the final total is confirmed by the store.
-              </p>
-            )}
+            <p role="note" style={{ fontSize: 13, color: '#7A7770', margin: '0 0 12px' }}>
+              Shipping and the final total are confirmed at checkout.
+            </p>
 
             <button
               type="button"
               className="cart-checkout-btn"
+              disabled={busy}
               onClick={handleProceedToCheckout}
             >
               PROCEED TO CHECKOUT
