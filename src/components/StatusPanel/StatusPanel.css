@@ -1,0 +1,110 @@
+/* Shared empty / blocked / unavailable state. Mirrors the cart empty state. */
+.status-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.status-panel-title {
+  font-family: var(--font-ui);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin: 0;
+}
+
+.status-panel-text {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  color: var(--color-text-light);
+  margin: 0;
+  max-width: 480px;
+}
+
+.status-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.status-panel-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 28px;
+  border: 1px solid var(--color-primary);
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.status-panel-cta:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.status-panel-cta.is-outline {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.status-panel-cta.is-outline:hover {
+  background: var(--color-primary-light);
+}
+
+.status-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 640px;
+  text-align: left;
+}
+
+.status-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 16px;
+  font-family: var(--font-ui);
+  color: var(--color-text-main);
+}
+
+.status-list-item a {
+  color: var(--color-text-main);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.status-list-item a:hover {
+  color: var(--color-primary);
+}
+
+.status-list-meta {
+  color: var(--color-text-body);
+  font-size: 14px;
+}

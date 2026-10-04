@@ -1,36 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   addItemToCart,
-  createSeedCartItems,
-  createSeedCartPricing,
   getCartCount,
   getCartTotals,
   loadCartFromStorage,
-  loadPricingFromStorage,
   removeCartItem,
   saveCartToStorage,
-  savePricingToStorage,
   updateCartItemQuantity,
 } from '../features/cart/cartUtils';
 
+// Browser-local cart (display estimate only). The backend cart requires an
+// authenticated session, so nothing here is ever treated as an order.
 export const useCart = () => {
-  const [cartItems, setCartItems] = useState(() => {
-    const stored = loadCartFromStorage();
-    return stored !== null ? stored : createSeedCartItems();
-  });
-
-  const [pricing, setPricing] = useState(() => {
-    const stored = loadPricingFromStorage();
-    return stored || createSeedCartPricing();
-  });
+  const [cartItems, setCartItems] = useState(() => loadCartFromStorage() ?? []);
 
   useEffect(() => {
     saveCartToStorage(cartItems);
   }, [cartItems]);
-
-  useEffect(() => {
-    savePricingToStorage(pricing);
-  }, [pricing]);
 
   const addToCart = useCallback((product) => {
     setCartItems((prev) => addItemToCart(prev, product));
@@ -44,43 +30,12 @@ export const useCart = () => {
     setCartItems((prev) => removeCartItem(prev, productId));
   }, []);
 
-  const clearCart = useCallback(() => {
-    setCartItems([]);
-    setPricing({
-      discount: 0,
-      shippingFee: 0,
-      shippingLabel: 'Free',
-      promoCode: '',
-    });
-  }, []);
-
-  const setCartPricing = useCallback((next) => {
-    setPricing((prev) => ({ ...prev, ...next }));
-  }, []);
-
-  const applyPromo = useCallback((code) => {
-    const promoCode = String(code || '').trim();
-    setPricing((prev) => ({ ...prev, promoCode }));
-  }, []);
+  const clearCart = useCallback(() => setCartItems([]), []);
 
   const cartCount = useMemo(() => getCartCount(cartItems), [cartItems]);
-  const totals = useMemo(
-    () => getCartTotals(cartItems, pricing),
-    [cartItems, pricing]
-  );
+  const totals = useMemo(() => getCartTotals(cartItems), [cartItems]);
 
-  return {
-    cartItems,
-    cartCount,
-    pricing,
-    totals,
-    addToCart,
-    updateQuantity,
-    removeItem,
-    clearCart,
-    setCartPricing,
-    applyPromo,
-  };
+  return { cartItems, cartCount, totals, addToCart, updateQuantity, removeItem, clearCart };
 };
 
 export default useCart;

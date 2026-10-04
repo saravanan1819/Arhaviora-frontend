@@ -290,3 +290,8 @@
       height: 64px;
    }
 }
+.newsletter-unavailable {
+   font-size: 13px;
+   color: #7A7770;
+   margin: 4px 0 0;
+}

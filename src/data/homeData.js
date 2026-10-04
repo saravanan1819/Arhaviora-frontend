@@ -32,22 +32,6 @@ export const collections = [
   { id: 'c7', title: 'Nursery\nEssentials', link: '/shop?category=nursery', image: '/assets/images/collections/nursery_essentials.png' },
 ];
 
-export const testimonials = [
-  { id: 't1', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_1.png', avatar: '/assets/images/avatars/user_1.png' },
-  { id: 't2', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_2.png', avatar: '/assets/images/avatars/user_2.png' },
-  { id: 't3', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_3.png', avatar: '/assets/images/avatars/user_3.png' },
-  { id: 't4', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_1.png', avatar: '/assets/images/avatars/user_1.png' },
-  { id: 't5', quote: 'Super spacious and the name embroidery makes it so special.i get so many compliments.', author: 'Riya & Ankit', verified: true, image: '/assets/images/testimonials/review_2.png', avatar: '/assets/images/avatars/user_2.png' },
-];
-
-export const realLifeVideos = [
-  { id: 'r1', thumbnail: '/assets/images/reels/reel_1.png' },
-  { id: 'r2', thumbnail: '/assets/images/reels/reel_2.png' },
-  { id: 'r3', thumbnail: '/assets/images/reels/reel_3.png' },
-  { id: 'r4', thumbnail: '/assets/images/reels/reel_4.png' },
-  { id: 'r5', thumbnail: '/assets/images/reels/reel_1.png' },
-];
-
 export const promiseItems = [
   { title: 'Made Just For Their Little World', desc: 'Every piece is uniquely personalized for your baby.' },
   { title: 'Premium Baby–Safe Materials', desc: 'Gentle, soft, and safe for delicate newborn skin.' },
@@ -56,10 +40,5 @@ export const promiseItems = [
 ];
 
 export const faqItems = [
-  { q: 'How long does personalization take?', a: 'Personalized orders are usually crafted within 3–5 business days before shipping.' },
-  { q: 'Can I personalize every product?', a: 'Most of our blankets, onesies, bathrobes, and gift sets support custom name and initials embroidery.' },
-  { q: 'Are your products safe for newborns?', a: 'Yes, all products use 100% certified organic cotton, non-toxic vegetable dyes, and are dermatologically tested.' },
-  { q: 'Can I send my order as a gift?', a: 'Absolutely! We offer luxury keepsake gift boxing and personalized handwritten gift cards upon checkout.' },
-  { q: 'What if I receive a damaged product?', a: 'We offer a 100% hassle-free replacement within 7 days of delivery for any damaged or misprinted items.' },
-  { q: 'Do you ship across India?', a: 'Yes, we ship to over 19,000+ pin codes across India with complimentary free express shipping on orders above ₹999.' },
+  { q: 'Can I personalize every product?', a: "Products marked 'Personalized' accept your text on the product page. The final price is confirmed in your cart." },
 ];

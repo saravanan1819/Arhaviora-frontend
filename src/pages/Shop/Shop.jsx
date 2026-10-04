@@ -1,32 +1,21 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { HeartIcon, StarIcon, ChevronRightIcon } from '../../components/Icons/Icons';
+import { HeartIcon, ChevronRightIcon } from '../../components/Icons/Icons';
+import { useAsync } from '../../hooks/useAsync';
+import { listCategories, listProducts } from '../../services/api/catalogue';
+import { adaptCategory, adaptProductList, formatPrice } from '../../features/catalogue/adapters';
 import './Shop.css';
 
-const BASE_PRODUCTS = [
-  { id: '1', title: 'Personalized Wildflower Baby Blanket', category: 'Swaddles & Blankets', age: '0-3', price: 1400, originalPrice: 1800, discount: '22% Off', rating: 4.8, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '2', title: 'Organic Muslin Swaddle & Wrap Set', category: 'Swaddles & Blankets', age: '0-3', price: 999, originalPrice: 1500, discount: '33% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '3', title: 'Embroidered Name Baby Onesie', category: 'Onesies & Rompers', age: '3-6', price: 650, originalPrice: 900, discount: '28% Off', rating: 4.9, gender: 'girl', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_3.png' },
-  { id: '4', title: 'Bamboo Cotton Romper with Name', category: 'Onesies & Rompers', age: '3-6', price: 749, originalPrice: 1100, discount: '32% Off', rating: 4.6, gender: 'boy', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_4.png' },
-  { id: '5', title: 'Baby Beanie & Mittens Set', category: 'Accessories & Caps', age: '0-3', price: 450, originalPrice: 699, discount: '36% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_5.png' },
-  { id: '6', title: 'Newborn Essentials Gift Hamper', category: 'Gift Sets', age: '0-3', price: 2499, originalPrice: 3500, discount: '29% Off', rating: 4.9, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_6.png' },
-  { id: '7', title: 'Personalised Star Print Blanket', category: 'Swaddles & Blankets', age: '6-9', price: 1299, originalPrice: 1800, discount: '28% Off', rating: 4.7, gender: 'unisex', availability: 'in-stock', imageUrl: '/assets/images/products/bestseller_1.png' },
-  { id: '8', title: 'Floral Cotton Baby Romper', category: 'Onesies & Rompers', age: '6-9', price: 799, originalPrice: 1200, discount: '33% Off', rating: 4.5, gender: 'girl', availability: 'pre-order', imageUrl: '/assets/images/products/bestseller_2.png' },
-  { id: '9', title: 'Baby Name Cap & Booties Gift Set', category: 'Gift Sets', age: '9-12', price: 1850, originalPrice: 2500, discount: '26% Off', rating: 4.8, gender: 'unisex', availability: 'ready-ship', imageUrl: '/assets/images/products/bestseller_3.png' },
+// Sort options map onto the backend's supported sortBy / sortOrder values.
+const SORT_OPTIONS = [
+  { label: 'Default', sortBy: undefined, sortOrder: undefined },
+  { label: 'Price: Low to High', sortBy: 'price', sortOrder: 'asc' },
+  { label: 'Price: High to Low', sortBy: 'price', sortOrder: 'desc' },
+  { label: 'Newest', sortBy: 'createdAt', sortOrder: 'desc' },
+  { label: 'Name: A to Z', sortBy: 'name', sortOrder: 'asc' },
 ];
-
-const ALL_PRODUCTS = Array.from({ length: 85 }, (_, i) => {
-  const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
-  return { ...base, id: String(i + 1) };
-});
-
-const AGE_OPTIONS = ['Newborn (0–3 Months)', '3–6 Months', '6–9 Months', '9–12 Months', '1–2 Years'];
-const CATEGORIES = ['Baby Essentials', 'Baby Clothing', 'New Born Essentials', 'Baby Shower Gifts', 'Nursery Essentials', 'Maternity Clothing', 'Diaper Caddy Organizer'];
-const GENDERS = ['Girl', 'Boy', 'Unisex'];
-const AVAILABILITY = ['In Stock', 'Ready to Ship', 'Pre Order'];
-const SORT_OPTIONS = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Customer Rating', 'Newest'];
-const PAGE_SIZE = 9;
-const SWATCHES = ['#A4C8E1', '#EDAABB', '#A8AA6A', '#FCE1B6'];
+const PRICE_MIN = 10;
+const PRICE_MAX = 3500;
 
 /* ── Collapsible Filter Section ── */
 const FilterSection = ({ title, children, defaultOpen = true }) => {
@@ -47,11 +36,12 @@ const FilterSection = ({ title, children, defaultOpen = true }) => {
 };
 
 /* ── Shop Product Card ── */
-const ShopCard = ({ product, onAddToCart, onToggleWishlist, isWishlisted }) => {
+const ShopCard = ({ product, onToggleWishlist, isWishlisted }) => {
+  const detailPath = `/product/${product.slug}`;
   return (
     <div className="sp-card">
       <div className="sp-card-img-wrap">
-        <Link to={`/product/${product.id}`}>
+        <Link to={detailPath}>
           <img src={product.imageUrl} alt={product.title} className="sp-card-img" loading="lazy" />
         </Link>
         <button
@@ -60,65 +50,77 @@ const ShopCard = ({ product, onAddToCart, onToggleWishlist, isWishlisted }) => {
             e.preventDefault();
             onToggleWishlist(product.id, !isWishlisted);
           }}
-          aria-label="Add to wishlist"
+          aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           <HeartIcon size={16} color="#D44D60" fill={isWishlisted ? '#D44D60' : 'none'} />
         </button>
       </div>
 
       <div className="sp-card-info">
-        <div className="sp-card-meta-row">
-          <div className="sp-card-swatches">
-            {SWATCHES.map(c => (
-              <span key={c} className="sp-card-swatch" style={{ background: c }} />
-            ))}
-            <span className="sp-card-options">+9 Options</span>
-          </div>
-          <div className="sp-card-rating">
-            {product.rating} <StarIcon size={13} color="#F5A623" fill="#F5A623" />
-          </div>
-        </div>
-
-        <Link to={`/product/${product.id}`} className="sp-card-title-link">
+        <Link to={detailPath} className="sp-card-title-link">
           <p className="sp-card-title">{product.title}</p>
         </Link>
 
         <div className="sp-card-price-row">
-          <span className="sp-card-price">₹{product.price.toLocaleString('en-IN')}</span>
-          <span className="sp-card-orig">₹{product.originalPrice.toLocaleString('en-IN')}</span>
-          <span className="sp-card-off">({product.discount})</span>
+          <span className="sp-card-price">{formatPrice(product.price)}</span>
         </div>
 
-        <button className="sp-card-atc" onClick={() => onAddToCart(product)}>ADD TO CART</button>
+        {/* A cart line needs a concrete variant, which the list does not carry. */}
+        <Link to={detailPath} className="sp-card-atc" style={{ textAlign: 'center' }}>
+          {product.isPersonalizable ? 'PERSONALIZE & ADD' : 'VIEW OPTIONS'}
+        </Link>
       </div>
     </div>
   );
 };
 
 /* ── Main Shop Page ── */
-export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
+export const Shop = ({ onToggleWishlist, wishlist = [] }) => {
   const [searchParams] = useSearchParams();
   const categoryQuery = searchParams.get('category');
-  const searchQuery = searchParams.get('search');
+  const searchQuery = searchParams.get('search') || '';
 
-  const [sortBy, setSortBy] = useState('Featured');
+  const [sortIndex, setSortIndex] = useState(0);
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [priceMin, setPriceMin] = useState(10);
-  const [priceMax, setPriceMax] = useState(3500);
-  const [checkedAges, setCheckedAges] = useState([]);
-  const [checkedCats, setCheckedCats] = useState([]);
-  const [checkedGenders, setCheckedGenders] = useState([]);
-  const [checkedAvail, setCheckedAvail] = useState([]);
+  const [priceMin, setPriceMin] = useState(PRICE_MIN);
+  const [priceMax, setPriceMax] = useState(PRICE_MAX);
+  const [debouncedPrice, setDebouncedPrice] = useState({ min: PRICE_MIN, max: PRICE_MAX });
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [pageSize, setPageSize] = useState(window.innerWidth <= 768 ? 6 : 9);
+
+  const sort = SORT_OPTIONS[sortIndex];
+
+  const categoriesState = useAsync(() => listCategories({ limit: 100 }), []);
+  const categories = useMemo(
+    () => (categoriesState.data?.categories || []).map(adaptCategory),
+    [categoriesState.data]
+  );
+
+  // ?category=<slug> preselects the matching backend category.
+  useEffect(() => {
+    if (!categoryQuery || !categories.length) return;
+    const match = categories.find((c) => c.slug === categoryQuery);
+    setSelectedCategoryId(match ? match.id : null);
+    setCurrentPage(1);
+  }, [categoryQuery, categories]);
 
   useEffect(() => {
     const handleResize = () => setPageSize(window.innerWidth <= 768 ? 6 : 9);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedPrice({ min: priceMin, max: priceMax }), 350);
+    return () => clearTimeout(t);
+  }, [priceMin, priceMax]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (filterOpen) {
@@ -129,51 +131,39 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
     return () => document.body.classList.remove('sp-filter-active');
   }, [filterOpen]);
 
-  const toggle = (setter, val) =>
-    setter(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
-
   const toggleAccordion = (section) => {
     setActiveAccordion(prev => prev === section ? null : section);
   };
 
   const clearFilters = () => {
-    setCheckedAges([]); setCheckedCats([]); setCheckedGenders([]); setCheckedAvail([]);
-    setPriceMin(10); setPriceMax(3500); setCurrentPage(1);
+    setSelectedCategoryId(null);
+    setPriceMin(PRICE_MIN); setPriceMax(PRICE_MAX); setCurrentPage(1);
   };
 
-  const filtered = useMemo(() => {
-    let list = [...ALL_PRODUCTS].filter(p => p.price >= priceMin && p.price <= priceMax);
+  const priceActive = debouncedPrice.min !== PRICE_MIN || debouncedPrice.max !== PRICE_MAX;
+  const filtersActive = priceActive || Boolean(selectedCategoryId) || Boolean(searchQuery);
 
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
-    }
+  const productsState = useAsync(
+    () =>
+      listProducts({
+        page: currentPage,
+        limit: pageSize,
+        search: searchQuery || undefined,
+        categoryId: selectedCategoryId || undefined,
+        sortBy: sort.sortBy,
+        sortOrder: sort.sortOrder,
+        minPrice: priceActive ? String(debouncedPrice.min) : undefined,
+        maxPrice: priceActive ? String(debouncedPrice.max) : undefined,
+      }),
+    [currentPage, pageSize, searchQuery, selectedCategoryId, sortIndex, debouncedPrice.min, debouncedPrice.max]
+  );
 
-    if (categoryQuery) {
-      const catLower = categoryQuery.toLowerCase();
-      list = list.filter(p => {
-        const pCat = p.category.toLowerCase();
-        if (catLower === 'blankets' && pCat.includes('blanket')) return true;
-        if (catLower === 'clothing' && (pCat.includes('clothing') || pCat.includes('onesie') || pCat.includes('romper'))) return true;
-        if (catLower === 'maternity' && pCat.includes('maternity')) return true;
-        if (catLower === 'nursery' && pCat.includes('nursery')) return true;
-        if (catLower === 'boxes' && pCat.includes('gift')) return true;
-        if (catLower === 'gifts' && pCat.includes('gift')) return true;
-        return pCat.includes(catLower);
-      });
-    }
-
-    if (checkedAges.length) list = list.filter(p => checkedAges.some(a => a.toLowerCase().includes(p.age)));
-    if (checkedCats.length) list = list.filter(p => checkedCats.includes(p.category));
-    if (checkedGenders.length) list = list.filter(p => checkedGenders.map(g => g.toLowerCase()).includes(p.gender));
-    if (sortBy === 'Price: Low to High') list.sort((a, b) => a.price - b.price);
-    if (sortBy === 'Price: High to Low') list.sort((a, b) => b.price - a.price);
-    if (sortBy === 'Customer Rating') list.sort((a, b) => b.rating - a.rating);
-    return list;
-  }, [checkedAges, checkedCats, checkedGenders, checkedAvail, priceMin, priceMax, sortBy, searchQuery, categoryQuery]);
-
-  const totalPages = Math.ceil(filtered.length / pageSize);
-  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const { products: paginated, pagination } = useMemo(
+    () => adaptProductList(productsState.data || {}),
+    [productsState.data]
+  );
+  const total = pagination.total;
+  const totalPages = pagination.totalPages;
 
   const goToPage = (p) => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   const handlePriceMin = (e) => { const v = Number(e.target.value); if (v < priceMax) { setPriceMin(v); setCurrentPage(1); } };
@@ -184,8 +174,24 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
     return [1, 2, 3, '…', totalPages];
   }, [totalPages]);
 
-  const minPercent = ((priceMin - 10) / (3500 - 10)) * 100;
-  const maxPercent = ((priceMax - 10) / (3500 - 10)) * 100;
+  const minPercent = ((priceMin - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+  const maxPercent = ((priceMax - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+
+  const sortList = (
+    <ul className="sp-sort-dropdown" role="listbox">
+      {SORT_OPTIONS.map((opt, i) => (
+        <li
+          key={opt.label}
+          role="option"
+          aria-selected={sortIndex === i}
+          className={sortIndex === i ? 'active' : ''}
+          onClick={() => { setSortIndex(i); setSortOpen(false); setCurrentPage(1); }}
+        >
+          {opt.label}
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <div className="sp-page">
@@ -199,7 +205,7 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
 
       <div className="sp-page-header sp-mobile-only">
         <h1 className="sp-page-title">Shop</h1>
-        <p className="sp-page-count">{filtered.length} Products</p>
+        <p className="sp-page-count">{total} Products</p>
       </div>
 
       <div className="sp-sort-bar sp-mobile-sort-bar sp-mobile-only">
@@ -207,7 +213,8 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
           <button
             className="sp-mobile-filter-toggle"
             onClick={() => setFilterOpen(o => !o)}
-            aria-label="Toggle Filters"
+            aria-label="Toggle filters"
+            aria-expanded={filterOpen}
           >
             <svg width="16" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="0" y1="2" x2="20" y2="2" stroke="#2E2B28" strokeWidth="1.6" strokeLinecap="round" />
@@ -218,7 +225,7 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
               <circle cx="8" cy="14" r="2.5" fill="#F9F9F9" stroke="#2E2B28" strokeWidth="1.4" />
             </svg>
             <span>Filter</span>
-            <span className="sp-filter-dot"></span>
+            {filtersActive && <span className="sp-filter-dot" aria-hidden="true"></span>}
           </button>
           <button
             className="sp-sort-btn"
@@ -229,15 +236,7 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
             Sort by
             <svg width="12" height="8" viewBox="0 0 12 8" fill="none" className={`sp-sort-chevron ${sortOpen ? 'open' : ''}`}><path d="M1 1L6 6L11 1" stroke="#2E2B28" strokeWidth="1.5" strokeLinecap="round" /></svg>
           </button>
-          {sortOpen && (
-            <ul className="sp-sort-dropdown" role="listbox">
-              {SORT_OPTIONS.map(opt => (
-                <li key={opt} role="option" aria-selected={sortBy === opt} className={sortBy === opt ? 'active' : ''} onClick={() => { setSortBy(opt); setSortOpen(false); setCurrentPage(1); }}>
-                  {opt}
-                </li>
-              ))}
-            </ul>
-          )}
+          {sortOpen && sortList}
         </div>
       </div>
 
@@ -265,25 +264,8 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
               <button className="sp-sidebar-clear-btn" onClick={clearFilters}>Clear All</button>
             </div>
 
-            <FilterSection title="Age">
-              {AGE_OPTIONS.map(a => (
-                <label key={a} className="sp-filter-checkbox-row">
-                  <input type="checkbox" checked={checkedAges.includes(a)} onChange={() => { toggle(setCheckedAges, a); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">{a}</span>
-                </label>
-              ))}
-            </FilterSection>
-
             <FilterSection title="Price">
               <div className="sp-desktop-only">
-                <label className="sp-filter-checkbox-row">
-                  <input type="checkbox" onChange={() => { setPriceMin(10); setPriceMax(500); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">Under 500</span>
-                </label>
-                <label className="sp-filter-checkbox-row">
-                  <input type="checkbox" onChange={() => { setPriceMin(500); setPriceMax(3500); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">Over 500</span>
-                </label>
                 <div className="sp-price-label-row" style={{ marginTop: '12px' }}>
                   <span className="sp-price-label">₹ {priceMin}</span>
                   <span className="sp-price-sep">–</span>
@@ -313,8 +295,8 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
                   />
                   <input
                     type="range"
-                    min="10"
-                    max="3500"
+                    min={PRICE_MIN}
+                    max={PRICE_MAX}
                     value={priceMin}
                     onChange={handlePriceMin}
                     className="sp-range sp-range-min"
@@ -322,8 +304,8 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
                   />
                   <input
                     type="range"
-                    min="10"
-                    max="3500"
+                    min={PRICE_MIN}
+                    max={PRICE_MAX}
                     value={priceMax}
                     onChange={handlePriceMax}
                     className="sp-range sp-range-max"
@@ -334,28 +316,21 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
             </FilterSection>
 
             <FilterSection title="Category">
-              {CATEGORIES.map(c => (
-                <label key={c} className="sp-filter-checkbox-row">
-                  <input type="checkbox" checked={checkedCats.includes(c)} onChange={() => { toggle(setCheckedCats, c); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">{c}</span>
-                </label>
-              ))}
-            </FilterSection>
-
-            <FilterSection title="Gender">
-              {GENDERS.map(g => (
-                <label key={g} className="sp-filter-checkbox-row">
-                  <input type="checkbox" checked={checkedGenders.includes(g)} onChange={() => { toggle(setCheckedGenders, g); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">{g}</span>
-                </label>
-              ))}
-            </FilterSection>
-
-            <FilterSection title="Availability">
-              {AVAILABILITY.map(av => (
-                <label key={av} className="sp-filter-checkbox-row">
-                  <input type="checkbox" checked={checkedAvail.includes(av)} onChange={() => { toggle(setCheckedAvail, av); setCurrentPage(1); }} />
-                  <span className="sp-filter-label">{av}</span>
+              {categoriesState.loading && <p className="sp-filter-label" role="status">Loading categories…</p>}
+              {categoriesState.error && (
+                <p className="sp-filter-label" role="alert">{categoriesState.error.message}</p>
+              )}
+              {!categoriesState.loading && !categoriesState.error && categories.length === 0 && (
+                <p className="sp-filter-label">No categories available.</p>
+              )}
+              {categories.map(c => (
+                <label key={c.id} className="sp-filter-checkbox-row">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategoryId === c.id}
+                    onChange={() => { setSelectedCategoryId(prev => (prev === c.id ? null : c.id)); setCurrentPage(1); }}
+                  />
+                  <span className="sp-filter-label">{c.name}</span>
                 </label>
               ))}
             </FilterSection>
@@ -368,18 +343,6 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
 
             {/* Custom Mobile Filter Footer */}
             <div className="sp-filter-mobile-footer sp-mobile-only">
-              <div className="sp-fmf-newsletter">
-                <h4>Join the Arhaviora Family <span style={{ color: '#D44D60' }}>♡</span></h4>
-                <div className="sp-fmf-input-wrap">
-                  <input type="email" placeholder="Enter your email" />
-                  <button aria-label="Submit">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="#D44D60" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
               <div className="sp-fmf-accordion">
                 <div className={`sp-fmf-section ${activeAccordion === 'shop' ? 'active' : ''}`}>
                   <h5 onClick={() => toggleAccordion('shop')}>
@@ -389,45 +352,10 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
                     </svg>
                   </h5>
                   <ul className="sp-fmf-links">
-                    <li><Link to="/shop?category=personalized">Personalized Gifts</Link></li>
-                    <li><Link to="/shop?category=clothing">Baby Clothing</Link></li>
-                    <li><Link to="/shop?category=maternity">Maternity Dresses</Link></li>
-                    <li><Link to="/shop?category=nursery">Nursery Essentials</Link></li>
-                    <li><Link to="/shop?category=hampers">Gift Boxes</Link></li>
-                    <li><Link to="/shop?category=bestsellers">Best Sellers</Link></li>
-                  </ul>
-                </div>
-
-                <div className={`sp-fmf-section ${activeAccordion === 'company' ? 'active' : ''}`}>
-                  <h5 onClick={() => toggleAccordion('company')}>
-                    Company
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-fmf-chevron">
-                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </h5>
-                  <ul className="sp-fmf-links">
-                    <li><Link to="/about">About Arhaviora</Link></li>
-                    <li><Link to="/story">Our Story</Link></li>
-                    <li><Link to="/contact">Contact Us</Link></li>
-                    <li><Link to="/shipping">Shipping & Returns</Link></li>
-                    <li><Link to="/faqs">FAQs</Link></li>
-                    <li><Link to="/privacy">Privacy Policy</Link></li>
-                  </ul>
-                </div>
-
-                <div className={`sp-fmf-section ${activeAccordion === 'care' ? 'active' : ''}`}>
-                  <h5 onClick={() => toggleAccordion('care')}>
-                    Customer Care
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg" className="sp-fmf-chevron">
-                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#4D4E5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </h5>
-                  <ul className="sp-fmf-links">
-                    <li><Link to="/faqs">FAQs</Link></li>
-                    <li><Link to="/shipping">Shipping & Returns</Link></li>
-                    <li><Link to="/track">Track Your Order</Link></li>
-                    <li><Link to="/returns">Return Policy</Link></li>
-                    <li><Link to="/gift-cards">Gift Cards</Link></li>
+                    {categories.map(c => (
+                      <li key={c.id}><Link to={`/shop?category=${c.slug}`}>{c.name}</Link></li>
+                    ))}
+                    <li><Link to="/shop">All Products</Link></li>
                   </ul>
                 </div>
               </div>
@@ -440,41 +368,44 @@ export const Shop = ({ onAddToCart, onToggleWishlist, wishlist = [] }) => {
         <main className={`sp-main ${filterOpen ? 'sp-hidden-mobile' : ''}`}>
 
           <div className="sp-sort-bar">
-            <p className="sp-count sp-desktop-only">Selected Products: <strong>{filtered.length}</strong></p>
+            <p className="sp-count sp-desktop-only">Selected Products: <strong>{total}</strong></p>
             <div className="sp-sort-wrap">
               <button className="sp-sort-btn sp-desktop-only" onClick={() => setSortOpen(o => !o)} aria-haspopup="listbox" aria-expanded={sortOpen}>
                 Sort by
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" className={`sp-sort-chevron ${sortOpen ? 'open' : ''}`}><path d="M1 1L6 6L11 1" stroke="#2E2B28" strokeWidth="1.5" strokeLinecap="round" /></svg>
               </button>
-              {sortOpen && (
-                <ul className="sp-sort-dropdown" role="listbox">
-                  {SORT_OPTIONS.map(opt => (
-                    <li key={opt} role="option" aria-selected={sortBy === opt} className={sortBy === opt ? 'active' : ''} onClick={() => { setSortBy(opt); setSortOpen(false); setCurrentPage(1); }}>
-                      {opt}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {sortOpen && sortList}
             </div>
           </div>
 
           {/* Product Grid */}
-          {paginated.length > 0 ? (
-            <div className="sp-product-grid">
+          {productsState.loading && paginated.length === 0 ? (
+            <div className="sp-empty-state" role="status"><p>Loading products…</p></div>
+          ) : productsState.error ? (
+            <div className="sp-empty-state" role="alert">
+              <p>{productsState.error.message} <button onClick={productsState.reload} className="sp-empty-clear">Try again</button></p>
+            </div>
+          ) : paginated.length > 0 ? (
+            <div className="sp-product-grid" style={{ opacity: productsState.loading ? 0.6 : 1 }}>
               {paginated.map(p => (
                 <ShopCard
                   key={p.id}
                   product={p}
-                  onAddToCart={onAddToCart}
                   onToggleWishlist={onToggleWishlist}
                   isWishlisted={wishlist.includes(p.id)}
                 />
               ))}
             </div>
           ) : (
-            <div className="sp-empty-state">
-              <p>No products match your filters. <button onClick={clearFilters} className="sp-empty-clear">Clear filters</button></p>
-            </div>
+            filtersActive ? (
+              <div className="sp-empty-state">
+                <p>No products match your filters. <button onClick={clearFilters} className="sp-empty-clear">Clear filters</button></p>
+              </div>
+            ) : (
+              <div className="sp-empty-state" role="status">
+                <p>Our collection is being prepared. Please check back soon.</p>
+              </div>
+            )
           )}
 
           {/* Pagination */}

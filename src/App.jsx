@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar/Navbar';
 import { Footer } from './components/Footer/Footer';
 import { Home } from './pages/Home/Home';
@@ -9,10 +9,16 @@ import { Cart } from './pages/Cart/Cart';
 import { Checkout } from './pages/Checkout/Checkout';
 import { useCart } from './hooks/useCart';
 import { useCheckout } from './hooks/useCheckout';
-import { CHECKOUT_STEPS, CHECKOUT_STEP } from './features/checkout/checkoutUtils';
+import { CHECKOUT_STEPS } from './features/checkout/checkoutUtils';
+import { AuthProvider, useAuth } from './features/auth/AuthContext';
+import { Login } from './pages/Auth/Login';
+import { Register } from './pages/Auth/Register';
+import { NotFound } from './pages/NotFound/NotFound';
+import { Wishlist } from './pages/Wishlist/Wishlist';
+import { Account } from './pages/Account/Account';
+import { useWishlist } from './hooks/useWishlist';
 
 function AppLayout() {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const {
@@ -22,30 +28,11 @@ function AppLayout() {
     addToCart,
     updateQuantity,
     removeItem,
-    applyPromo,
-    clearCart,
   } = useCart();
 
-  const {
-    addresses,
-    selectedAddressId,
-    selectedAddress,
-    currentStep,
-    paymentMethod,
-    placedOrder,
-    selectAddress,
-    deleteAddress,
-    requestAddAddress,
-    requestEditAddress,
-    goToAddressStep,
-    beginNewCheckout,
-    selectPaymentMethod,
-    confirmOrderSummaryStep,
-    canProceedToPayment,
-    copyOrderId,
-  } = useCheckout();
+  const { currentStep, goToAddressStep } = useCheckout();
+  const { status: authStatus, isAuthenticated } = useAuth();
 
-  const [wishlist, setWishlist] = useState(['1', '3']);
   const [notification, setNotification] = useState(null);
 
   const showToast = (message) => {
@@ -53,7 +40,11 @@ function AppLayout() {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const { productIds: wishlist, toggle: toggleWishlist } = useWishlist({ onMessage: showToast });
+
+  // Only variant-backed lines (from the product page) can be added.
   const handleAddToCart = (product) => {
+    if (!product?.productVariantId) return;
     addToCart(product);
     showToast(`"${product.title}" added to your cart!`);
   };
@@ -63,47 +54,12 @@ function AppLayout() {
     showToast('Item removed from cart');
   };
 
-  const handleToggleWishlist = (productId, isAdded) => {
-    setWishlist((prev) =>
-      isAdded ? [...prev, productId] : prev.filter((id) => id !== productId)
-    );
-    showToast(isAdded ? 'Added item to your wishlist!' : 'Removed item from your wishlist');
-  };
-
-  const handleConfirmOrderSummary = () => {
-    const placed = confirmOrderSummaryStep(cartItems, totals);
-    if (placed) {
-      clearCart();
-    }
-  };
-
-  const handleCopyOrderId = async () => {
-    const ok = await copyOrderId();
-    showToast(ok ? 'Order ID copied' : 'Could not copy Order ID');
-  };
-
-  const handleDownloadInvoice = () => {
-    showToast('Invoice download coming soon');
-  };
-
-  const handleContinueShopping = () => {
-    beginNewCheckout();
-    navigate('/shop');
-  };
-
-  const handleTrackOrder = () => {
-    showToast('Order tracking coming soon');
-  };
+  const handleToggleWishlist = (productId, isAdded) => toggleWishlist(productId, isAdded);
 
   const handleProceedToCheckout = () => {
     goToAddressStep();
     navigate('/checkout');
   };
-
-  const hideFooter =
-    location.pathname === '/checkout' &&
-    (currentStep === CHECKOUT_STEP.ORDER_SUMMARY ||
-      currentStep === CHECKOUT_STEP.CONFIRMATION);
 
   return (
     <div className="app-container">
@@ -139,22 +95,23 @@ function AppLayout() {
         <Routes>
           <Route
             path="/"
-            element={<Home onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />}
+            element={<Home onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />}
           />
           <Route
             path="/shop"
             element={
               <Shop
-                onAddToCart={handleAddToCart}
                 onToggleWishlist={handleToggleWishlist}
                 wishlist={wishlist}
               />
             }
           />
           <Route 
-            path="/product/:id" 
+            path="/product/:slug" 
             element={<ProductDetails onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} wishlist={wishlist} />} 
           />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/cart"
             element={
@@ -163,7 +120,7 @@ function AppLayout() {
                 totals={totals}
                 onUpdateQuantity={updateQuantity}
                 onRemoveItem={handleRemoveItem}
-                onApplyPromo={applyPromo}
+                isAuthenticated={isAuthenticated}
                 onProceedToCheckout={handleProceedToCheckout}
               />
             }
@@ -173,42 +130,29 @@ function AppLayout() {
             element={
               <Checkout
                 steps={CHECKOUT_STEPS}
-                activeStep={currentStep || CHECKOUT_STEP.ADDRESS}
-                addresses={addresses}
-                selectedAddressId={selectedAddressId}
-                selectedAddress={selectedAddress}
-                paymentMethod={paymentMethod}
+                activeStep={currentStep}
+                authStatus={authStatus}
                 cartItems={cartItems}
-                totals={totals}
-                placedOrder={placedOrder}
-                onSelectAddress={selectAddress}
-                onDeleteAddress={deleteAddress}
-                onRequestAddAddress={requestAddAddress}
-                onRequestEditAddress={requestEditAddress}
-                onSelectPaymentMethod={selectPaymentMethod}
-                onGoToAddressStep={goToAddressStep}
-                onConfirmOrderSummary={handleConfirmOrderSummary}
-                canProceedToPayment={canProceedToPayment(cartItems)}
-                onCopyOrderId={handleCopyOrderId}
-                onDownloadInvoice={handleDownloadInvoice}
-                onContinueShopping={handleContinueShopping}
-                onTrackOrder={handleTrackOrder}
-                onBeginNewCheckout={beginNewCheckout}
               />
             }
           />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      {hideFooter ? null : <Footer />}
+      <Footer />
     </div>
   );
 }
 
 function App() {
   return (
-    <Router>
-      <AppLayout />
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
     </Router>
   );
 }

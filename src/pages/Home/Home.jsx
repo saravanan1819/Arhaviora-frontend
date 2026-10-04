@@ -1,25 +1,27 @@
-import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { StarIcon, HeartIcon, ShieldCheckIcon, TruckIcon, GiftIcon, PlusIcon, MinusIcon, PlayIcon, CheckCircleIcon, ShoppingBagIcon, UserIcon, SparkleIcon, ArrowRightIcon } from '../../components/Icons/Icons';
 import { Personalizer } from '../../components/Personalizer/Personalizer';
-import { ALL_PRODUCTS } from '../../data/products';
-import { heroSlides, collections, testimonials, realLifeVideos, promiseItems, faqItems } from '../../data/homeData';
+import { useAsync } from '../../hooks/useAsync';
+import { listProducts } from '../../services/api/catalogue';
+import { adaptProductList, formatPrice } from '../../features/catalogue/adapters';
+import { heroSlides, collections, promiseItems, faqItems } from '../../data/homeData';
 import './Home.css';
 
-export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wishlist = [] }) => {
-  const [customName, setCustomName] = useState('Vivaan');
+export const Home = ({ onToggleWishlist = () => { }, wishlist = [] }) => {
   const [activeFaq, setActiveFaq] = useState(-1);
-  const [emailInput, setEmailInput] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const { hash } = useLocation();
+
+  // Router links do not scroll to #anchors on navigation, so do it here.
+  useEffect(() => {
+    if (!hash) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+  }, [hash]);
 
   const collTrackRef = useRef(null);
-  const testTrackRef = useRef(null);
-  const reelTrackRef = useRef(null);
   const [collScrollProgress, setCollScrollProgress] = useState(0);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [activeReel, setActiveReel] = useState(0);
 
   const handleCollScroll = () => {
     if (collTrackRef.current) {
@@ -31,66 +33,8 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
     }
   };
 
-  const handleTestScroll = () => {
-    if (!testTrackRef.current) return;
-
-    const firstCard = testTrackRef.current.querySelector('.hp-test-card');
-    if (!firstCard) return;
-
-    const gap = parseFloat(getComputedStyle(testTrackRef.current).columnGap || '0');
-    const step = firstCard.offsetWidth + gap;
-    if (step > 0) {
-      setActiveTestimonial(Math.round(testTrackRef.current.scrollLeft / step));
-    }
-  };
-
-  const scrollToTestimonial = (idx) => {
-    const track = testTrackRef.current;
-    const target = track?.children[idx];
-    if (!track || !target) return;
-
-    track.scrollTo({
-      left: target.offsetLeft,
-      behavior: 'smooth'
-    });
-    setActiveTestimonial(idx);
-  };
-
-  const handleReelScroll = () => {
-    if (!reelTrackRef.current) return;
-
-    const firstCard = reelTrackRef.current.querySelector('.hp-reel-card');
-    if (!firstCard) return;
-
-    const gap = parseFloat(getComputedStyle(reelTrackRef.current).columnGap || '0');
-    const step = firstCard.offsetWidth + gap;
-    if (step > 0) {
-      setActiveReel(Math.round(reelTrackRef.current.scrollLeft / step));
-    }
-  };
-
-  const scrollToReel = (idx) => {
-    const track = reelTrackRef.current;
-    const target = track?.children[idx];
-    if (!track || !target) return;
-
-    track.scrollTo({
-      left: target.offsetLeft,
-      behavior: 'smooth'
-    });
-    setActiveReel(idx);
-  };
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (emailInput.trim()) {
-      setSubscribed(true);
-      setTimeout(() => setSubscribed(false), 3500);
-      setEmailInput('');
-    }
-  };
-
-  const bestSellers = ALL_PRODUCTS.slice(0, 6);
+  const featuredState = useAsync(() => listProducts({ isFeatured: 'true', limit: 6 }), []);
+  const bestSellers = adaptProductList(featuredState.data || {}).products;
 
   return (
     <main className="hp-root">
@@ -178,41 +122,43 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
       <section className="hp-bestsellers">
         <div className="hp-section-pre hp-pre-rose">Best Seller</div>
         <h2 className="hp-section-h2">Discover what parents love most</h2>
+        {featuredState.loading ? (
+          <p className="hp-section-sub" role="status">Loading best sellers…</p>
+        ) : featuredState.error ? (
+          <p className="hp-section-sub" role="alert">
+            {featuredState.error.message}{' '}
+            <button type="button" onClick={featuredState.reload}>Try again</button>
+          </p>
+        ) : bestSellers.length === 0 ? (
+          <p className="hp-section-sub">No featured products yet. Check back soon.</p>
+        ) : (
         <div className="hp-bs-grid">
           {bestSellers.map((p) => {
             const isWishlisted = wishlist.includes(p.id);
+            const detailPath = `/product/${p.slug}`;
             return (
               <div key={p.id} className="hp-bs-card">
                 <div className="hp-bs-img-wrap">
-                  <img src={p.imageUrl} alt={p.title} className="hp-bs-img" />
+                  <Link to={detailPath}><img src={p.imageUrl} alt={p.title} className="hp-bs-img" /></Link>
                   <span className="hp-bs-badge">Best Seller</span>
-                  <button className={`hp-bs-heart ${isWishlisted ? 'active' : ''}`} onClick={() => onToggleWishlist(p.id, !isWishlisted)} aria-label="Wishlist">
+                  <button className={`hp-bs-heart ${isWishlisted ? 'active' : ''}`} onClick={() => onToggleWishlist(p.id, !isWishlisted)} aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}>
                     <HeartIcon size={16} color="#D44D60" fill={isWishlisted ? '#D44D60' : 'none'} />
                   </button>
                 </div>
                 <div className="hp-bs-info">
-                  <div className="hp-bs-swatches-row">
-                    <div className="hp-bs-swatches">
-                      <span className="hp-swatch" style={{ background: '#A4C8E1' }}></span>
-                      <span className="hp-swatch" style={{ background: '#EDAABB' }}></span>
-                      <span className="hp-swatch" style={{ background: '#A8AA6A' }}></span>
-                      <span className="hp-swatch" style={{ background: '#FCE1B6' }}></span>
-                      <span className="hp-swatch-more">+9 Options</span>
-                    </div>
-                    <div className="hp-bs-rating">{p.rating} <StarIcon size={14} color="#F5A623" /></div>
-                  </div>
-                  <div className="hp-bs-title">{p.title}</div>
+                  <Link to={detailPath} className="hp-bs-title">{p.title}</Link>
                   <div className="hp-bs-price-row">
-                    <span className="hp-bs-price">₹{p.price}</span>
-                    <span className="hp-bs-orig">₹{p.originalPrice}</span>
-                    <span className="hp-bs-off">({p.discount})</span>
+                    <span className="hp-bs-price">{formatPrice(p.price)}</span>
                   </div>
-                  <button className="hp-bs-atc" onClick={() => onAddToCart(p)}>ADD TO CART</button>
+                  <Link to={detailPath} className="hp-bs-atc" style={{ textAlign: 'center' }}>
+                    {p.isPersonalizable ? 'PERSONALIZE & ADD' : 'VIEW OPTIONS'}
+                  </Link>
                 </div>
               </div>
             );
           })}
         </div>
+        )}
         <div className="hp-bs-view-all">
           <Link to="/shop" className="hp-btn-rose">View All Products <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
         </div>
@@ -249,7 +195,7 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
 
       {/* 5. PERSONALIZER */}
       <section className="hp-personalizer" id="personalizer-section">
-        <Personalizer showSectionHeading={true} showGiftMessage={false} onAddToCart={onAddToCart} />
+        <Personalizer showSectionHeading={true} showGiftMessage={false} />
       </section>
 
       {/* 6. OUR PROMISE */}
@@ -278,14 +224,14 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
       <section className="hp-gifting">
         <div className="hp-section-pre hp-pre-rose">Personalized Gifting</div>
         <h2 className="hp-section-h2">Create The Perfect Gift For Every<br />Little Moments</h2>
-        <p className="hp-section-sub">Curate meaningful gift boxes for every precious beginning and celebration.</p>
+        <p className="hp-section-sub">Find meaningful gifts for every precious beginning and celebration.</p>
         <div className="hp-gift-grid">
           <div className="hp-gift-card">
             <img src="/assets/images/gifting/newborn_gift_box.png" alt="Newborn Gift Box" className="hp-gift-img" />
             <div className="hp-gift-overlay">
               <h3 className="hp-gift-title">Newborn Gift Box</h3>
-              <p className="hp-gift-desc">Create a personalized gift box filled with newborn essentials.</p>
-              <Link to="/shop?category=newborn" className="hp-btn-rose hp-btn-sm">Build Newborn Gift Box <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
+              <p className="hp-gift-desc">Browse newborn essentials that make thoughtful gifts.</p>
+              <Link to="/shop?category=newborn" className="hp-btn-rose hp-btn-sm">Shop Newborn Essentials <span className="hp-btn-icon-circle"><img src="/assets/icons/right_arrow.png" alt="Arrow" width="28" height="28" style={{ display: 'block' }} /></span></Link>
             </div>
           </div>
           <div className="hp-gift-card">
@@ -305,88 +251,6 @@ export const Home = ({ onAddToCart = () => { }, onToggleWishlist = () => { }, wi
           <div className="hp-benefit"><div className="hp-ben-icon"><HeartIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Personalized for You</div><div className="hp-ben-sub">Add names, initials &amp; more</div></div></div>
           <div className="hp-benefit-divider"></div>
           <div className="hp-benefit"><div className="hp-ben-icon"><ShieldCheckIcon size={20} color="#D44D60" /></div><div><div className="hp-ben-title">Premium Quality</div><div className="hp-ben-sub">Safe, soft &amp; baby-friendly</div></div></div>
-        </div>
-      </section>
-
-      {/* 8. TESTIMONIALS */}
-      <section className="hp-testimonials">
-        <div className="hp-section-pre hp-pre-rose">Testimonials</div>
-        <h2 className="hp-section-h2">Loved by Thousands of Happy<br />Parents</h2>
-        <div className="hp-test-slider-container">
-          <div
-            ref={testTrackRef}
-            className="hp-test-track"
-            onScroll={handleTestScroll}
-          >
-            {testimonials.map((t) => (
-              <div key={t.id} className="hp-test-card">
-                <div className="hp-test-img-wrap">
-                  <img src={t.image} alt={t.author} className="hp-test-img" />
-                  <span className="hp-test-badge">Parent's Pick</span>
-                </div>
-                <div className="hp-test-body">
-                  <div className="hp-test-stars">{'★★★★★'}</div>
-                  <p className="hp-test-quote">{t.quote}</p>
-                  <div className="hp-test-author-row">
-                    <img src={t.avatar} alt={t.author} className="hp-test-avatar" />
-                    <div>
-                      <div className="hp-test-author">{t.author} {t.verified && <span className="hp-verified-badge">✓</span>}</div>
-                      <div className="hp-test-verified">Verified Buyer</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="hp-carousel-dots">
-          {testimonials.map((_, idx) => (
-            <span
-              key={idx}
-              className={`hp-dot ${activeTestimonial === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
-              onClick={() => scrollToTestimonial(idx)}
-              style={{ cursor: 'pointer' }}
-            ></span>
-          ))}
-        </div>
-        <div className="hp-stats-bar">
-          <div className="hp-stat"><div className="hp-ben-icon"><TruckIcon size={20} color="#D44D60" /></div><div className="hp-stat-text"><div className="hp-stat-num">10,000+</div><div className="hp-stat-lbl">Order Delivered</div></div></div>
-          <div className="hp-stat-div"></div>
-          <div className="hp-stat"><div className="hp-ben-icon"><StarIcon size={20} color="#D44D60" fill="none" /></div><div className="hp-stat-text"><div className="hp-stat-num">4.9/5</div><div className="hp-stat-lbl">Average Rating</div></div></div>
-          <div className="hp-stat-div"></div>
-          <div className="hp-stat"><div className="hp-ben-icon"><HeartIcon size={20} color="#D44D60" /></div><div className="hp-stat-text"><div className="hp-stat-num">1200+</div><div className="hp-stat-lbl">Happy Parents</div></div></div>
-          <div className="hp-stat-div"></div>
-          <div className="hp-stat"><div className="hp-ben-icon"><ShieldCheckIcon size={20} color="#D44D60" /></div><div className="hp-stat-text"><div className="hp-stat-num">100%</div><div className="hp-stat-lbl">Loved &amp; Trusted</div></div></div>
-        </div>
-      </section>
-
-      {/* 9. INSTAGRAM REELS */}
-      <section className="hp-reels">
-        <h2 className="hp-section-h2">See Arhaviora in Real Life</h2>
-        <p className="hp-section-sub">Real babies. Real moments. Beautiful personalized memories.</p>
-        <div className="hp-reels-slider-container">
-          <div
-            ref={reelTrackRef}
-            className="hp-reels-track"
-            onScroll={handleReelScroll}
-          >
-            {realLifeVideos.map((v) => (
-              <div key={v.id} className="hp-reel-card">
-                <img src={v.thumbnail} alt="Arhaviora reel" className="hp-reel-img" />
-                <button className="hp-play-btn" aria-label="Play video"><PlayIcon size={20} color="#2D2A26" /></button>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="hp-carousel-dots">
-          {realLifeVideos.map((_, idx) => (
-            <span
-              key={idx}
-              className={`hp-dot ${activeReel === idx ? 'hp-dot-rose' : 'hp-dot-sm'}`}
-              onClick={() => scrollToReel(idx)}
-              style={{ cursor: 'pointer' }}
-            ></span>
-          ))}
         </div>
       </section>
 

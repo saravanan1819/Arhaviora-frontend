@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRightIcon } from '../../components/Icons/Icons';
 import { formatINR, formatItemPrice, formatCartTitle, flatTitle } from '../../utils/currency';
@@ -9,16 +9,10 @@ export const Cart = ({
   totals = {},
   onUpdateQuantity,
   onRemoveItem,
-  onApplyPromo,
+  isAuthenticated = false,
   onProceedToCheckout,
 }) => {
   const navigate = useNavigate();
-  const [promoCode, setPromoCode] = useState(totals.promoCode || '');
-
-  useEffect(() => {
-    setPromoCode(totals.promoCode || '');
-  }, [totals.promoCode]);
-
   const handleProceedToCheckout = () => {
     if (onProceedToCheckout) {
       onProceedToCheckout();
@@ -27,17 +21,8 @@ export const Cart = ({
     navigate('/checkout');
   };
 
-  const {
-    subtotal = 0,
-    discount = 0,
-    shippingLabel = 'Free',
-    total = 0,
-  } = totals;
+  const { subtotal = 0, total = 0 } = totals;
 
-  const handleApplyPromo = (e) => {
-    e.preventDefault();
-    onApplyPromo?.(promoCode.trim());
-  };
 
   if (cartItems.length === 0) {
     return (
@@ -60,7 +45,7 @@ export const Cart = ({
 
   const firstItem = cartItems[0];
   const categoryLabel = firstItem?.category;
-  const productHref = `/product/${firstItem?.productId || firstItem?.id}`;
+  const productHref = firstItem?.productSlug ? `/product/${firstItem.productSlug}` : '/shop';
 
   return (
     <div className="cart-page">
@@ -124,7 +109,7 @@ export const Cart = ({
                     <p className="cart-item-title">{formatCartTitle(item.title)}</p>
                     {item.color ? (
                       <p className="cart-item-meta cart-item-meta-color">
-                        Color : <span>{item.color}</span>
+                        Option : <span>{item.color}</span>
                       </p>
                     ) : null}
                     {item.name ? (
@@ -178,46 +163,22 @@ export const Cart = ({
           <div className="cart-summary-card">
             <h2 className="cart-summary-title">Order Summary</h2>
 
-            <form className="cart-promo-form" onSubmit={handleApplyPromo}>
-              <label className="cart-promo-label" htmlFor="cart-promo">
-                Discount code / Promo code
-              </label>
-              <input
-                id="cart-promo"
-                className="cart-promo-input"
-                type="text"
-                name="promoCode"
-                placeholder="Code"
-                autoComplete="off"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-              />
-            </form>
-
             <div className="cart-summary-rows">
               <div className="cart-summary-row">
-                <span>Subtotal</span>
+                <span>Estimated subtotal</span>
                 <span>{formatINR(subtotal)}</span>
               </div>
-              <div className="cart-summary-row cart-summary-row-muted">
-                <span>Shipping</span>
-                <span className="cart-shipping-free">
-                  {typeof shippingLabel === 'number'
-                    ? formatINR(shippingLabel)
-                    : shippingLabel}
-                </span>
-              </div>
-              {discount > 0 ? (
-                <div className="cart-summary-row cart-summary-row-muted">
-                  <span>Discount</span>
-                  <span className="cart-discount">-{formatINR(discount)}</span>
-                </div>
-              ) : null}
               <div className="cart-summary-row cart-summary-total">
                 <span>Total</span>
                 <span className="cart-total-value">{formatINR(total)}</span>
               </div>
             </div>
+
+            {!isAuthenticated && (
+              <p role="status" style={{ fontSize: 13, color: '#7A7770', margin: '0 0 12px' }}>
+                Sign in to check out. Prices shown are estimates; the final total is confirmed by the store.
+              </p>
+            )}
 
             <button
               type="button"
@@ -228,22 +189,6 @@ export const Cart = ({
             </button>
           </div>
 
-          <div className="cart-secure-card">
-            <h3 className="cart-secure-title">100% Secure Checkout</h3>
-            <p className="cart-secure-text">
-              Your payment information is safe with us. We use industry-standard encryption.
-            </p>
-            <div className="cart-secure-badges">
-              <span className="cart-secure-badge">
-                <img src="/assets/icons/SSL_lock.svg" alt="" width={14} height={14} />
-                SSL SECURIED
-              </span>
-              <span className="cart-secure-badge">
-                <img src="/assets/icons/safe-paymet.svg" alt="" width={14} height={14} />
-                SAFE PAYMENTS
-              </span>
-            </div>
-          </div>
         </aside>
       </div>
 

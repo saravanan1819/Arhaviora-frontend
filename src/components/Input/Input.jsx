@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import './Input.css';
 
 export const Input = ({
@@ -12,13 +12,19 @@ export const Input = ({
   className = '',
   ...props
 }) => {
+  const autoId = useId();
+  const id = props.id || autoId;
+  const errorId = `${id}-error`;
   return (
     <div className={`input-field-group ${className}`}>
-      {label && <label className="input-field-label">{label}</label>}
+      {label && <label className="input-field-label" htmlFor={id}>{label}</label>}
       <div className={`input-field-wrapper ${error ? 'has-error' : ''}`}>
         {Icon && <Icon size={18} className="input-icon-slot" />}
         <input
+          id={id}
           type={type}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -26,7 +32,7 @@ export const Input = ({
           {...props}
         />
       </div>
-      {error && <span className="input-field-error">{error}</span>}
+      {error && <span className="input-field-error" id={errorId} role="alert">{error}</span>}
     </div>
   );
 };

@@ -63,3 +63,7 @@
   font-size: 12px;
   color: var(--color-status-error);
 }
+/* The wrapper shows focus (focus-within); avoid a double ring on the control. */
+.input-native-control:focus-visible {
+  outline: none;
+}

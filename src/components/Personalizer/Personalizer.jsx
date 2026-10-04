@@ -20,24 +20,12 @@ const fonts = [
 export const Personalizer = ({
   showGiftMessage = false,
   showSectionHeading = true,
-  onAddToCart,
   className = ''
 }) => {
   const [customName, setCustomName] = useState('Vivaan');
   const [selectedColor, setSelectedColor] = useState(colorSwatches[1].hex);
   const [selectedFont, setSelectedFont] = useState(fonts[0]);
   const [giftMessage, setGiftMessage] = useState('');
-
-  const handleAction = () => {
-    if (onAddToCart) {
-      onAddToCart({
-        customName,
-        selectedColor,
-        selectedFont: selectedFont.name,
-        giftMessage
-      });
-    }
-  };
 
   return (
     <section className={`personalizer-section ${showGiftMessage ? 'has-gift-msg' : ''} ${className}`} id="personalizer-section">
@@ -121,12 +109,12 @@ export const Personalizer = ({
             </div>
           )}
 
-          <button type="button" className="pers-preview-hint-btn" onClick={handleAction}>
+          <div className="pers-preview-hint-btn" role="note">
             <span className="pers-hint-icon-circle">
               <HeartIcon size={14} color="#2D2A26" />
             </span>
             <span>Fill in the details and see the magic in real time</span>
-          </button>
+          </div>
         </div>
 
         <div className="pers-preview-card">
@@ -156,6 +144,10 @@ export const Personalizer = ({
               {customName || 'Vivaan'}
             </div>
           </div>
+
+          <p className="pers-form-sub" style={{ textAlign: 'center', marginTop: 12 }}>
+            Illustrative preview only. Personalization text is entered on each product page.
+          </p>
 
           <div className="pers-quality-bar">
             <span>Premium Quality</span>

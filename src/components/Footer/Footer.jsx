@@ -1,20 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
 
 export const Footer = () => {
-  const [emailInput, setEmailInput] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (emailInput.trim()) {
-      setSubscribed(true);
-      setTimeout(() => setSubscribed(false), 3500);
-      setEmailInput('');
-    }
-  };
-
   return (
     <footer className="site-footer">
       <div className="footer-container">
@@ -87,24 +75,9 @@ export const Footer = () => {
           {/* Newsletter Subscription */}
           <div className="newsletter-block">
             <h4 className="newsletter-heading">Join the Arhaviora Family</h4>
-            <form className="newsletter-form" onSubmit={handleSubscribe}>
-              <input
-                type="email"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="Enter your email"
-                className="newsletter-input"
-                required
-              />
-              <button type="submit" className="newsletter-submit-btn" aria-label="Subscribe to newsletter">
-                ➔
-              </button>
-            </form>
-            {subscribed && (
-              <div className="newsletter-toast-msg">
-                ✓ Thank you for subscribing to Arhaviora!
-              </div>
-            )}
+            <p className="newsletter-unavailable" role="status">
+              Newsletter sign-up is coming soon.
+            </p>
           </div>
 
           {/* 3-Column Navigation Grid */}
@@ -141,9 +114,7 @@ export const Footer = () => {
               <ul className="footer-links-list">
                 <li><Link to="/faqs">FAQs</Link></li>
                 <li><Link to="/shipping">Shipping & Returns</Link></li>
-                <li><Link to="/track">Track Your Order</Link></li>
                 <li><Link to="/returns">Return Policy</Link></li>
-                <li><Link to="/gift-cards">Gift Cards</Link></li>
               </ul>
             </div>
           </div>
